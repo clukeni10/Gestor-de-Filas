@@ -2,9 +2,11 @@ import { Box, Text } from "@chakra-ui/react";
 
 type Props = {
     title: string
-    children: React.ReactNode;
+    children: React.ReactNode
+    onClick: () => void
+    
 }
-export default function SmallerCards({ title, children }: Props) {
+export default function SmallerCards({ title, children,  onClick }: Props) {
     return (
         <Box
             display="flex"
@@ -12,6 +14,9 @@ export default function SmallerCards({ title, children }: Props) {
             justifyContent="center"
             alignItems="center"
             mt="10"
+            onClick={onClick}
+            cursor="pointer"
+            
         >
             <Box
                 bg="white"
@@ -22,6 +27,7 @@ export default function SmallerCards({ title, children }: Props) {
                 flexDirection="column"
                 justifyContent="center"
                 alignItems="center"
+                
             >
                 {children}
             </Box>

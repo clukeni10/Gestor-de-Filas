@@ -1,17 +1,26 @@
 import { Box, Flex, Heading, Stack, Text } from "@chakra-ui/react";
-import { JSX } from "react";
+import { JSX, useState } from "react";
 import { Header } from "../components/Header";
 import Cards from "../components/Cards";
 import { IoMdTv } from "react-icons/io";
 import SmallerCards from "../components/SmallerCards";
 import { FaUser } from "react-icons/fa6";
 import { MdDesk } from "react-icons/md";
+import AdminLogin from "./adminLogin";
 
 export default function HomeScreen(): JSX.Element {
 
+    const [open, setOpen] = useState<boolean>(false);
+
+    function handleOnOpenAdminLogin() {
+        setOpen(true);  // Alterado para true
+    }
+
+    
+
     return (
         <Stack
-            bgColor="#00476F"
+           // 
             h="100vh"
         >
             <Header />
@@ -28,6 +37,8 @@ export default function HomeScreen(): JSX.Element {
             <Flex
                 justifyContent="space-evenly"
                 mt="12"
+                
+                
             >
                 <Cards title="TV" >
                     {<IoMdTv size="200" color="black" />}
@@ -59,18 +70,18 @@ export default function HomeScreen(): JSX.Element {
             <Flex
                 justifyContent="space-evenly"
             >
-                <SmallerCards title="Admin">
+                <SmallerCards title="Admin" onClick={handleOnOpenAdminLogin} >
                     <FaUser size="40" color="black" />
                 </SmallerCards>
 
-                <SmallerCards title="Balcão">
-                    <MdDesk     size="40" color="black" />
+                <SmallerCards title="Balcão" onClick={handleOnOpenAdminLogin}>
+                    <MdDesk size="40" color="black" />
                 </SmallerCards>
             </Flex>
 
-
+            {/* Passando o estado e a função de atualização diretamente */}
+            <AdminLogin open={open} onOpenChange={(e) => setOpen(e.open)} />
 
         </Stack>
-
     )
 }

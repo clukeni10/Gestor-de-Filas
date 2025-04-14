@@ -1,12 +1,26 @@
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App";
 import { Provider } from "./components/ui/provider"
-import React from "react"
-import ReactDOM from "react-dom/client"
-import App from "./App"
 
-ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
-    <Provider>
-      <App />
-    </Provider>
-  </React.StrictMode>,
-)
+const root = ReactDOM.createRoot(document.getElementById('root')!)
+
+if (window.location.hostname === 'localhost') {
+	root.render(
+		<Provider 
+			enableSystem={false}
+		>
+			<App />
+		</Provider>
+	)
+} else {
+	root.render(
+		<React.StrictMode>
+			<Provider
+				enableSystem={false}
+			>
+				<App />
+			</Provider>
+		</React.StrictMode>
+	)
+}
