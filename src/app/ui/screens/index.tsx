@@ -38,7 +38,7 @@ export default function HomeScreen(): JSX.Element {
           <FaUser size="40" color="black" />
         </SmallerCards>
 
-        <SmallerCards title="Balcão" onClick={() => navigate("/login")}>
+        <SmallerCards title="Balcão" onClick={() => navigate("/deskLogin")}>
           <MdDesk size="40" color="black" />
         </SmallerCards>
       </Flex>

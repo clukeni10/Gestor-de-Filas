@@ -6,7 +6,6 @@ import {
   Box,
   Heading,
   Text,
-  Alert,
 } from "@chakra-ui/react";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react";
@@ -16,7 +15,7 @@ import { useNavigate } from "react-router-dom";
 
 
 
-export default function AdminLogin() {
+export default function DeskLogin() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const navigate = useNavigate()
@@ -25,7 +24,7 @@ export default function AdminLogin() {
   const handleLogin = async () => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      navigate("../adminDashboard");
+      navigate("../desk");
     } catch (error) {
       console.error("Erro ao fazer login:", error);
 
@@ -43,7 +42,7 @@ export default function AdminLogin() {
       >
         <VStack gap={4} align="stretch">
           <Heading size="lg" textAlign="center" color="black">
-            Painel de Administração
+            Painel do Balcão
           </Heading>
 
           <Input
@@ -67,20 +66,10 @@ export default function AdminLogin() {
           </Button>
 
           <Text fontSize="sm" color="gray.500" textAlign="center">
-            Acesso restrito aos administradores
+            Acesso restrito aos atendentes de balcão
           </Text>
         </VStack>
       </Box>
-
-      <Alert.Root status="error">
-      <Alert.Indicator />
-      <Alert.Content>
-        <Alert.Title>Dados Incorretos</Alert.Title>
-        <Alert.Description>
-          Os dados inseridos estão incorrectos. Por favor retifique e tente novamente.
-        </Alert.Description>
-      </Alert.Content>
-    </Alert.Root>
     </Stack>
   );
 }

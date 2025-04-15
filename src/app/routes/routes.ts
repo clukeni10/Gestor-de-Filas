@@ -4,5 +4,14 @@ export const routes = {
     },
     login: {
         route: "login"
+    },
+    deskLogin: {
+        route: "deskLogin"
+    },
+    adminDashboard: {
+        route: "adminDashboard"
+    },
+    desk: {
+        route:"desk"
     }
 }
