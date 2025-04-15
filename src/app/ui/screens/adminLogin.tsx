@@ -1,56 +1,41 @@
-import { Input, VStack, Button, Box} from "@chakra-ui/react";
-import DialogModal from "../components/DialogModal";
+import {
+  Input,
+  VStack,
+  Stack,
+  Button,
+  Box,
+  Heading,
+  Text,
+} from "@chakra-ui/react";
 
-interface AdminLogin {
-  open: boolean;
-  onOpenChange: (e: { open: boolean }) => void;
-}
-
-export default function AdminLogin(props: AdminLogin) {
-  const { open, onOpenChange } = props;
-
+export default function AdminLogin() {
   return (
-    <DialogModal
-      title="Login Admin"
-      open={open}
-      onOpenChange={(e) => onOpenChange({ open: e.open })}
-      footer={
-        <Button
-          colorScheme="blue"
-          size="lg"
-          onClick={() => console.log("Login clicado")}
-          mt={4}
-        >
-        </Button>
-      }
-    >
+    <Stack minH="100vh" align="center" justify="center" bg="gray.50">
       <Box
-        bg="white" 
+        bg="white"
+        p={8}
+        rounded="lg"
+        shadow="md"
+        w={{ base: "90%", md: "400px" }}
       >
-        <VStack>
-          <Input
-            placeholder="E-mail"
-            type="email"
-            bg="gray.100"
-            borderColor="gray.300"
-            _focus={{
-              borderColor: "blue.500",
-              boxShadow: "0 0 0 1px #00476F",
-            }}
-          />
-          <Input
-            placeholder="Senha"
-            type="password"
-            bg="gray.100"
-            borderColor="gray.300"
-            _focus={{
-              borderColor: "blue.500",
-              boxShadow: "0 0 0 1px #00476F",
-            }}
-          />
-        </VStack>
+        <VStack gap={4} align="stretch">
+          <Heading size="lg" textAlign="center" color="black">
+            Painel de Administração
+          </Heading>
 
+          <Input placeholder="E-mail" type="email" focusRingColor="#00476F" color="black"/>
+
+          <Input placeholder="Senha" type="password" focusRingColor="#00476F" color="black"/>
+
+          <Button bg="#00476F" color="white">
+            Entrar
+          </Button>
+
+          <Text fontSize="sm" color="gray.500" textAlign="center">
+            Acesso restrito aos administradores
+          </Text>
+        </VStack>
       </Box>
-    </DialogModal>
+    </Stack>
   );
 }
