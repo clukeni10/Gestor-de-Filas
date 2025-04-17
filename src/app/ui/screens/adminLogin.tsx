@@ -8,21 +8,18 @@ import {
   Text,
   Alert,
 } from "@chakra-ui/react";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { useState } from "react";
-import { auth } from "../../database/firebase"
+/* import { signInWithEmailAndPassword } from "firebase/auth";
+ */import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
-
-
+/*import { auth } from "../../database/firebase"
+import { useNavigate } from "react-router-dom";*/
 
 export default function AdminLogin() {
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const navigate = useNavigate()
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+   const navigate = useNavigate()
 
-
-  const handleLogin = async () => {
+  /*   const handleLogin = async () => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
       navigate("../adminDashboard");
@@ -30,6 +27,10 @@ export default function AdminLogin() {
       console.error("Erro ao fazer login:", error);
 
     }
+  }; */
+
+  const handleLogin = async () => {
+    navigate("../adminDashboard");
   };
 
   return (
@@ -62,7 +63,7 @@ export default function AdminLogin() {
             color="black"
           />
 
-          <Button bg="#00476F" color="white" onClick={handleLogin} >
+          <Button bg="#00476F" color="white" onClick={handleLogin}>
             Entrar
           </Button>
 
@@ -73,14 +74,15 @@ export default function AdminLogin() {
       </Box>
 
       <Alert.Root status="error">
-      <Alert.Indicator />
-      <Alert.Content>
-        <Alert.Title>Dados Incorretos</Alert.Title>
-        <Alert.Description>
-          Os dados inseridos estão incorrectos. Por favor retifique e tente novamente.
-        </Alert.Description>
-      </Alert.Content>
-    </Alert.Root>
+        <Alert.Indicator />
+        <Alert.Content>
+          <Alert.Title>Dados Incorretos</Alert.Title>
+          <Alert.Description>
+            Os dados inseridos estão incorrectos. Por favor retifique e tente
+            novamente.
+          </Alert.Description>
+        </Alert.Content>
+      </Alert.Root>
     </Stack>
   );
 }

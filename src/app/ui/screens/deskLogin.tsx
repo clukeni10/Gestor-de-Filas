@@ -7,10 +7,11 @@ import {
   Heading,
   Text,
 } from "@chakra-ui/react";
-import { signInWithEmailAndPassword } from "firebase/auth";
+/* import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../../database/firebase" */
 import { useState } from "react";
-import { auth } from "../../database/firebase"
-import { useNavigate } from "react-router-dom";
+/* 
+import { useNavigate } from "react-router-dom"; */
 
 
 
@@ -18,10 +19,10 @@ import { useNavigate } from "react-router-dom";
 export default function DeskLogin() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
-  const navigate = useNavigate()
+/*   const navigate = useNavigate() */
 
 
-  const handleLogin = async () => {
+  /* const handleLogin = async () => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
       navigate("../desk");
@@ -29,7 +30,7 @@ export default function DeskLogin() {
       console.error("Erro ao fazer login:", error);
 
     }
-  };
+  }; */
 
   return (
     <Stack minH="100vh" align="center" justify="center" bg="gray.50">
@@ -61,7 +62,7 @@ export default function DeskLogin() {
             color="black"
           />
 
-          <Button bg="#00476F" color="white" onClick={handleLogin} >
+          <Button bg="#00476F" color="white" /* onClick={handleLogin} */ >
             Entrar
           </Button>
 
