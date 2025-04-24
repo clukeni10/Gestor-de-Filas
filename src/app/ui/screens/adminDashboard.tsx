@@ -9,6 +9,7 @@ export default function AdminDashboard(){
         <Box>
             <SidebarMenu/>
 
+            <Box bg="white"></Box>
         </Box>
         
     )

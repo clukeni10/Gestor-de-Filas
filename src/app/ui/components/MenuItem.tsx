@@ -11,10 +11,10 @@ export default function MenuItem(props: MenuItemProps) {
       align="center"
       px="4"
       py="3"
-      gap="4 "
+      gap="10px"
       cursor="pointer"
       _hover={{ bg: "#005d8e", color: "white" }}
-      transition="0.2s"
+      transition="0.5s"
       borderRadius="md"
     >
       {props.children}

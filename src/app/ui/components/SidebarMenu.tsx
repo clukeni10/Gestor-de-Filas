@@ -9,8 +9,9 @@ import { RiTicket2Line } from "react-icons/ri";
 export default function SidebarMenu(){
       return(
             <Box
-                  bg="#00476f"
-                  color="white"
+                  bg="white"
+                  height="100%"
+                  color="#00476f"
                   w="250px"
                   py={6}
                   px={2}
@@ -23,7 +24,7 @@ export default function SidebarMenu(){
                         textAlign="center"
                         mb="8"
                         letterSpacing="wide"
-                        color="white"
+                        color="#00476f"
                   >
                         Dashboard
                   </Text>
@@ -31,11 +32,9 @@ export default function SidebarMenu(){
 
                         <MenuItem label="Dashboard" children={<FiHome/>}/>
                         <MenuItem label="Gestão de Usuários" children={<FiUsers />}/>
-                        <MenuItem label="Serviços Oferecidos" children={<MdMedicalServices />}/>
                         <MenuItem label="Dispenser de Senhas" children={<RiTicket2Line />}/>
                         <MenuItem label="Filas de Atendimento" children={<HiOutlineQueueList />}/>
                         <MenuItem label="Configurações" children={<FiSettings />}/>
-                        <MenuItem label="Relatórios" children={<FiBarChart2 />}/>
                         <MenuItem label="Suporte e Ajuda" children={<FiHelpCircle />}/>
                         <MenuItem label="Sair" children={<FiLogOut />}/>
 

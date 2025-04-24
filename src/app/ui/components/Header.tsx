@@ -6,13 +6,13 @@ export function Header() {
     <Box
         bg="white"
         w="100%"
-        h="130px"
+        h="80px"
         display="flex"
         justifyContent="center"
         alignItems="center"
     >
         <Image
-            h="100px"
+            h="70px"
             src="./logo.png" />
 
     </Box>

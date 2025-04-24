@@ -15,17 +15,17 @@ export default function HomeScreen(): JSX.Element {
     <Stack>
       <Header />
 
-      <Heading fontSize="4xl" display="flex" justifyContent="center" mt="10">
+      <Heading fontSize="4xl" display="flex" justifyContent="center" mt="5">
         Escolha o dispositivo
       </Heading>
 
-      <Flex justifyContent="space-evenly" mt="12">
-        <Cards title="TV">{<IoMdTv size="200" color="black" />}</Cards>
+      <Flex justifyContent="space-evenly" mt="5">
+        <Cards title="TV">{<IoMdTv size="150" color="black" />}</Cards>
 
-        <Cards title="Dispensador">{<IoMdTv size="200" color="black" />}</Cards>
+        <Cards title="Dispensador">{<IoMdTv size="150" color="black" onClick={() => navigate("/dispenser")} cursor="pointer"/>}</Cards>
       </Flex>
 
-      <Flex justifyContent="space-between" alignItems="center" mt="10">
+      <Flex justifyContent="space-between" alignItems="center" mt="5">
         <Box bg="white" width="40%" height="1"></Box>
         <Text fontSize="4xl" fontWeight="bold">
           Ou

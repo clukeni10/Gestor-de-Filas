@@ -13,5 +13,8 @@ export const routes = {
     },
     desk: {
         route:"desk"
+    },
+    dispenser: {
+        route:"dispenser"
     }
 }

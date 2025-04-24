@@ -14,8 +14,8 @@ export default function Cards({ title, children }: Props) {
     return (
         <Box
             bg="white"
-            width="300px"
-            height="300px"
+            width="200px"
+            height="200px"
             rounded="xl"
             display="flex"
             flexDirection="column"
@@ -32,7 +32,7 @@ export default function Cards({ title, children }: Props) {
 
             </Box>
             <Text
-                fontSize="3xl"
+                fontSize="2xl"
                 fontWeight="bold"
                 color="black"
             >
