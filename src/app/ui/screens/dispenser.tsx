@@ -1,94 +1,55 @@
-import { Box, Text, Flex } from "@chakra-ui/react";
+import { Box, Text, Flex, Image } from "@chakra-ui/react";
 import DispenserOption from "../components/DispenserOption"
+import { useState, useEffect } from "react";
+//import { useOptionState } from "../../hooks/useOptionState";
 
-export default function Dispenser(){
-      return(
-      <Box>
-            <Box bg="white" h="50px">
-                  
-            </Box>
+export default function Dispenser() {
+      const [time, setTime] = useState<string>("");
 
-            <Text fontSize="3xl" textAlign="center" mt="5">Retire aqui a sua senha</Text>
+      useEffect(() => {
+            const updateTime = () => {
+              const agora = new Date();
+              const horas = String(agora.getHours()).padStart(2, "0");
+              const minutos = String(agora.getMinutes()).padStart(2, "0");
+              setTime(`${horas}:${minutos}`);
+            };
+        
+            updateTime();
+        
+            const interval = setInterval(updateTime, 1000);    
 
-<Flex 
-flexDirection="column"
-alignItems="center"
-gap="20px"
->
-<Box 
-            bg="white" 
-            w="400px" 
-            h="80px"
-            rounded="md"
-            display="flex"
-            justifyContent="center"
-            alignItems="center"
-            cursor="pointer" 
-            >
-                  <Text fontSize="5xl"  fontWeight="500"  color="#00476f">A</Text>
-            <Text fontSize="2xl"   color="#00476f" >Atendimento Geral</Text>
-            </Box>
+            return () => clearInterval(interval);
+          }, []);
 
-            <Box 
-            bg="white" 
-            w="400px" 
-            h="80px"
-            rounded="md"
-            display="flex"
-            justifyContent="center"
-            alignItems="center"
-            cursor="pointer" 
-            >
-                  <Text fontSize="5xl" fontWeight="500"   color="#00476f">B</Text>
-            <Text fontSize="2xl"   color="#00476f" >Marcação de Consulta</Text>
-            </Box>
+          //const generateTicketPVC = useOptionState(state => state.generateTicketPVC)
+            
+            return (
+                  <Box>
 
-            <Box 
-            bg="white" 
-            w="400px" 
-            h="80px"
-            rounded="md"
-            display="flex"
-            justifyContent="center"
-            alignItems="center"
-            cursor="pointer"
-             
->
-<Text fontSize="5xl" fontWeight="500"   color="#00476f">C</Text>
-            <Text fontSize="2xl"   color="#00476f" >Urgências</Text>
-            </Box>
+                        <Box bg="white" h="100px">
+                              <Flex alignItems="center" justifyContent="space-between">
+                                    <Image src="./logo.png" w="300px" ml="5" />
 
-            <Box 
-            bg="white" 
-            w="400px" 
-            h="80px"
-            rounded="md"
-            display="flex"
-            justifyContent="center"
-            alignItems="center"
-            cursor="pointer" 
-            >
-                  <Text fontSize="5xl" fontWeight="500"   color="#00476f">D</Text>
-            <Text fontSize="2xl"   color="#00476f" >Exames </Text>
-            </Box>
+                                    <Text color="#00476F" fontSize="4xl" fontWeight="bold" mr="5">{time}</Text>
+                              </Flex>
 
-            <Box 
-            bg="white" 
-            w="400px" 
-            h="80px"
-            rounded="md"
-            display="flex"
-            justifyContent="center"
-            alignItems="center"
-            cursor="pointer" 
-            >
+                        </Box>
 
-            <Text fontSize="5xl" fontWeight="500"   color="#00476f">E</Text>
-            <Text fontSize="2xl"   color="#00476f" >Atendimento Prioritário </Text>
-            </Box>
-</Flex>
-           
-           <DispenserOption/>
-      </Box>
-      )
-}
+                        <Text fontSize="3xl" textAlign="center" mt="8" mb="8">Retire aqui a sua senha</Text>
+
+                        <Flex
+                              flexDirection="column"
+                              alignItems="center"
+                              gap="20px"
+                        >
+                              <DispenserOption label="A" name="Atendimento Geral" />
+                              <DispenserOption label="B" name="Marcação de Consulta" />
+                              <DispenserOption label="C" name="Urgências" />
+                              <DispenserOption label="D" name="Exames" />
+                              <DispenserOption label="E" name="Atendimento Prioritário" />
+                        </Flex>
+
+
+                  </Box>
+            )
+      }
