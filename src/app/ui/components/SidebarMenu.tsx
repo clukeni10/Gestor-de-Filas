@@ -1,47 +1,60 @@
-import { Box, VStack, Text } from "@chakra-ui/react";
- import { FiBarChart2, FiHelpCircle, FiHome, FiLogOut, FiSettings, FiUsers } from "react-icons/fi";
- 
+import { Box, VStack, Text, Flex } from "@chakra-ui/react";
+import { FiHelpCircle, FiHome, FiLogOut, FiSettings, FiUsers } from "react-icons/fi";
 import MenuItem from "./MenuItem";
 import { HiOutlineQueueList } from "react-icons/hi2";
-import { MdMedicalServices } from "react-icons/md";
 import { RiTicket2Line } from "react-icons/ri";
 
-export default function SidebarMenu(){
-      return(
-            <Box
-                  bg="white"
-                  height="100%"
-                  color="#00476f"
-                  w="250px"
-                  py={6}
-                  px={2}
-                  boxShadow="md"
-                  position="fixed"
-            >
-                  <Text
-                        fontSize="2xl"
-                        fontWeight="bold"
-                        textAlign="center"
-                        mb="8"
-                        letterSpacing="wide"
-                        color="#00476f"
-                  >
-                        Dashboard
-                  </Text>
-                  <VStack  align="stretch">
+export default function SidebarMenu() {
+  return (
+    <Box
+      bg="white"
+      height="100%"
+      color="#00476f"
+      h="90vh"
+      py={6}
+      px={4}
+      boxShadow="md"
+      rounded="md"
+    >
+      <Flex direction="column" align="center" mb={8}>
+        <Text
+          fontSize="2xl"
+          fontWeight="bold"
+          textAlign="center"
+          mb="4"
+          letterSpacing="wide"
+          color="#00476f"
+        >
+          Dashboard
+        </Text>
 
-                        <MenuItem label="Dashboard" children={<FiHome/>}/>
-                        <MenuItem label="Gestão de Usuários" children={<FiUsers />}/>
-                        <MenuItem label="Dispenser de Senhas" children={<RiTicket2Line />}/>
-                        <MenuItem label="Filas de Atendimento" children={<HiOutlineQueueList />}/>
-                        <MenuItem label="Configurações" children={<FiSettings />}/>
-                        <MenuItem label="Suporte e Ajuda" children={<FiHelpCircle />}/>
-                        <MenuItem label="Sair" children={<FiLogOut />}/>
+        {/* Seção de usuário logado */}
+        <Flex align="center" gap="12px">
+          <Box
+            borderRadius="full"
+            w="10px"
+            h="10px"
+            bg="green.500"
+            boxShadow="0px 0px 10px rgba(0, 0, 0, 0.2)"
+          />
+          <Text fontSize="lg" color="#00476f" fontWeight="semibold">
+            João Silva
+          </Text>
+        </Flex>
+      </Flex>
 
-                  </VStack>
+      {/* Linha azul separadora */}
+      <Box borderBottom="2px" borderColor="#00476f" mb="6" />
 
-            </Box>
-            
-      
-)
+      <VStack align="stretch">
+        <MenuItem label="Dashboard" children={<FiHome />} />
+        <MenuItem label="Gestão de Usuários" children={<FiUsers />} />
+        <MenuItem label="Dispenser de Senhas" children={<RiTicket2Line />} />
+        <MenuItem label="Filas de Atendimento" children={<HiOutlineQueueList />} />
+        <MenuItem label="Configurações" children={<FiSettings />} />
+        <MenuItem label="Suporte e Ajuda" children={<FiHelpCircle />} />
+        <MenuItem label="Sair" children={<FiLogOut />} />
+      </VStack>
+    </Box>
+  );
 }

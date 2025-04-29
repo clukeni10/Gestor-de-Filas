@@ -17,7 +17,7 @@ export default function MenuItem(props: MenuItemProps) {
       transition="0.5s"
       borderRadius="md"
     >
-      {props.children}
+      {props.children} 
       <Text>{props.label}</Text>
     </Flex>
   );

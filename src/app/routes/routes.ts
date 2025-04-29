@@ -16,5 +16,8 @@ export const routes = {
     },
     dispenser: {
         route:"dispenser"
+    },
+    tv:{
+        route: "tv"
     }
 }

@@ -20,7 +20,7 @@ export default function HomeScreen(): JSX.Element {
       </Heading>
 
       <Flex justifyContent="space-evenly" mt="5">
-        <Cards title="TV">{<IoMdTv size="150" color="black" />}</Cards>
+        <Cards title="TV">{<IoMdTv size="150" color="black" onClick={() => navigate("/tv")} cursor="pointer" />}</Cards>
 
         <Cards title="Dispensador">{<IoMdTv size="150" color="black" onClick={() => navigate("/dispenser")} cursor="pointer"/>}</Cards>
       </Flex>
