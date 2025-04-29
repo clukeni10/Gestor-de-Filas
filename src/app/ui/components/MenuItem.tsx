@@ -3,9 +3,10 @@ import { Flex, Text } from "@chakra-ui/react";
 interface MenuItemProps {
   children: React.ReactNode;
   label: string;
+  onClick?: () => void; // <- aqui está a correção
 }
 
-export default function MenuItem(props: MenuItemProps) {
+export default function MenuItem({ children, label, onClick }: MenuItemProps) {
   return (
     <Flex
       align="center"
@@ -16,9 +17,10 @@ export default function MenuItem(props: MenuItemProps) {
       _hover={{ bg: "#005d8e", color: "white" }}
       transition="0.5s"
       borderRadius="md"
+      onClick={onClick} // <- você pode usar aqui
     >
-      {props.children} 
-      <Text>{props.label}</Text>
+      {children}
+      <Text>{label}</Text>
     </Flex>
   );
 }

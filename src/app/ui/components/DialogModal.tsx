@@ -15,6 +15,7 @@ interface DialogModal {
     open: boolean
     title: string
     footer?: React.ReactNode
+    textButton: string
     onOpenChange: (e: { open: boolean }) => void
 }
 
@@ -24,6 +25,7 @@ export default function DialogModal(props: PropsWithChildren<DialogModal>): JSX.
         open,
         title,
         children,
+        textButton,
         onOpenChange
     } = props
 
@@ -47,7 +49,7 @@ export default function DialogModal(props: PropsWithChildren<DialogModal>): JSX.
                 <DialogBody>
                     {children}
                 </DialogBody>
-                <DialogFooter><Button bg="#00476F">Login</Button></DialogFooter>
+                <DialogFooter><Button bg="#00476F">{textButton}</Button></DialogFooter>
             </DialogContent>
         </DialogRoot>
     )

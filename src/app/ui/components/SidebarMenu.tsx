@@ -3,8 +3,12 @@ import { FiHelpCircle, FiHome, FiLogOut, FiSettings, FiUsers } from "react-icons
 import MenuItem from "./MenuItem";
 import { HiOutlineQueueList } from "react-icons/hi2";
 import { RiTicket2Line } from "react-icons/ri";
+import { useNavigate } from "react-router-dom";
 
 export default function SidebarMenu() {
+  const navigate = useNavigate();
+
+  
   return (
     <Box
       bg="white"
@@ -47,8 +51,8 @@ export default function SidebarMenu() {
       <Box borderBottom="2px" borderColor="#00476f" mb="6" />
 
       <VStack align="stretch">
-        <MenuItem label="Dashboard" children={<FiHome />} />
-        <MenuItem label="Gestão de Usuários" children={<FiUsers />} />
+        <MenuItem label="Dashboard" children={<FiHome />} onClick={() => navigate("/adminDashboard")} />
+        <MenuItem label="Gestão de Usuários" children={<FiUsers />} onClick={() => navigate("/adminUsers")}/>
         <MenuItem label="Dispenser de Senhas" children={<RiTicket2Line />} />
         <MenuItem label="Filas de Atendimento" children={<HiOutlineQueueList />} />
         <MenuItem label="Configurações" children={<FiSettings />} />

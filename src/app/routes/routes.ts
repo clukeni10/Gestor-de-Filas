@@ -19,5 +19,8 @@ export const routes = {
     },
     tv:{
         route: "tv"
+    },
+    adminUsers:{
+        route: "adminUsers"
     }
 }
