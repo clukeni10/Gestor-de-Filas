@@ -17,7 +17,7 @@ import { useNavigate } from "react-router-dom";*/
 export default function AdminLogin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-   const navigate = useNavigate()
+  const navigate = useNavigate()
 
   /*   const handleLogin = async () => {
     try {
@@ -73,7 +73,13 @@ export default function AdminLogin() {
         </VStack>
       </Box>
 
-      <Alert.Root status="error">
+      <Alert.Root
+        status="error"
+        w="500px"
+        position="absolute"
+        top="5%"
+        right="3%"
+        >
         <Alert.Indicator />
         <Alert.Content>
           <Alert.Title>Dados Incorretos</Alert.Title>

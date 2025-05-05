@@ -10,6 +10,7 @@ import {
 /* import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../database/firebase" */
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 /* 
 import { useNavigate } from "react-router-dom"; */
 
@@ -19,7 +20,7 @@ import { useNavigate } from "react-router-dom"; */
 export default function DeskLogin() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
-/*   const navigate = useNavigate() */
+ const navigate = useNavigate() 
 
 
   /* const handleLogin = async () => {
@@ -32,6 +33,9 @@ export default function DeskLogin() {
     }
   }; */
 
+  const handleLogin = async () => {
+    navigate("../deskLines");
+  };
   return (
     <Stack minH="100vh" align="center" justify="center" bg="gray.50">
       <Box
@@ -62,7 +66,7 @@ export default function DeskLogin() {
             color="black"
           />
 
-          <Button bg="#00476F" color="white" /* onClick={handleLogin} */ >
+          <Button bg="#00476F" color="white" onClick={handleLogin} >
             Entrar
           </Button>
 

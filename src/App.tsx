@@ -7,6 +7,7 @@ import Dispenser from "./app/ui/screens/dispenser"
 import DeskLogin from "./app/ui/screens/deskLogin";
 import TV from "./app/ui/components/TV";
 import AdminUsers from "./app/ui/screens/adminUsers";
+import DeskLines from "./app/ui/screens/deskLines";
 
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
         <Route path="/dispenser" element={<Dispenser/>}/>
         <Route path="/tv" element={<TV/>}/>
         <Route path="/adminUsers" element={<AdminUsers/>}/>
+        <Route path="/deskLines" element={<DeskLines/>}/>
         
         
       </Routes>

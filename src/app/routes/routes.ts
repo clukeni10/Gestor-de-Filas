@@ -22,5 +22,8 @@ export const routes = {
     },
     adminUsers:{
         route: "adminUsers"
+    },
+    deskLines:{
+        route: "deskLines"
     }
 }

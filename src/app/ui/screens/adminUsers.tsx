@@ -4,6 +4,7 @@ import { useState } from "react";
 import DialogModal from "../components/DialogModal";
 import { addDoc, collection } from "firebase/firestore";
 import { database } from "../../database/firebase";
+import { Field } from "../../../components/ui/field";
 
 export default function AdminUsers() {
     const [isOpen, setIsOpen] = useState(false);
@@ -49,7 +50,7 @@ export default function AdminUsers() {
                 <SidebarMenu />
 
                 <Box bg="white" h="90vh" rounded="md" color="#00476f">
-                    <Heading size="lg" mb={6} textAlign="center" color="#00476f">
+                    <Heading size="3xl" fontWeight="bold" mb={6} textAlign="center" color="#00476f">
                         Registre novo usuário
                     </Heading>
 
@@ -87,12 +88,15 @@ export default function AdminUsers() {
                     <Box display="flex" flexDirection="column" gap="4">
                         <Box>
                             <Text mb="1">Nome</Text>
+                            <Field>
                             <Input
                                 placeholder="Digite o nome"
                                 value={nome}
                                 onChange={(e) => setNome(e.target.value)}
                                 focusRingColor="#00476F"
                             />
+                            </Field>
+                            
                         </Box>
 
                         <Box>
