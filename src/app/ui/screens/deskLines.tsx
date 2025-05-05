@@ -24,7 +24,7 @@ export default function DeskLines() {
     
       {/* Header */}
       <Grid
-        templateColumns="1fr 1fr"
+        templateColumns="1fr 1fr 200px "
         bg="white"
         color="#00476F"
         h="50px"
@@ -36,6 +36,9 @@ export default function DeskLines() {
         </Center>
         <Center as="div">
           <Text fontSize="lg">Em Atendimento</Text>
+        </Center>
+        <Center as="div">
+          <Text fontSize="lg">Ações</Text>
         </Center>
       </Grid>
 
