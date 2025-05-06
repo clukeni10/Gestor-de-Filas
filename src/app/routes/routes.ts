@@ -25,5 +25,8 @@ export const routes = {
     },
     deskLines:{
         route: "deskLines"
+    },
+    adminDispenser:{
+        route: "adminDispenser"
     }
 }

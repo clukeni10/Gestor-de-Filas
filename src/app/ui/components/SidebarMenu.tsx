@@ -53,7 +53,7 @@ export default function SidebarMenu() {
       <VStack align="stretch">
         <MenuItem label="Dashboard" children={<FiHome />} onClick={() => navigate("/adminDashboard")} />
         <MenuItem label="Gestão de Usuários" children={<FiUsers />} onClick={() => navigate("/adminUsers")}/>
-        <MenuItem label="Dispenser de Senhas" children={<RiTicket2Line />} />
+        <MenuItem label="Dispenser de Senhas" children={<RiTicket2Line />} onClick={() => navigate("/adminDispenser")}/>
         <MenuItem label="Filas de Atendimento" children={<HiOutlineQueueList />} />
         <MenuItem label="Configurações" children={<FiSettings />} />
         <MenuItem label="Suporte e Ajuda" children={<FiHelpCircle />} />

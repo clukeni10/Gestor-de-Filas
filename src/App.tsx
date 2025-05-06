@@ -8,6 +8,7 @@ import DeskLogin from "./app/ui/screens/deskLogin";
 import TV from "./app/ui/components/TV";
 import AdminUsers from "./app/ui/screens/adminUsers";
 import DeskLines from "./app/ui/screens/deskLines";
+import AdminDispenser from "./app/ui/screens/adminDispenser";
 
 
 function App() {
@@ -22,6 +23,9 @@ function App() {
         <Route path="/tv" element={<TV/>}/>
         <Route path="/adminUsers" element={<AdminUsers/>}/>
         <Route path="/deskLines" element={<DeskLines/>}/>
+        <Route path="/adminDispenser" element={<AdminDispenser/>}/>
+ 
+        
         
         
       </Routes>

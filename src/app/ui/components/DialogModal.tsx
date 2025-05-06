@@ -1,9 +1,8 @@
-import { Button } from "@chakra-ui/react"
+
 import {
     DialogBody,
     DialogCloseTrigger,
     DialogContent,
-    DialogFooter,
     DialogHeader,
     DialogRoot,
     DialogTitle,
@@ -25,7 +24,6 @@ export default function DialogModal(props: PropsWithChildren<DialogModal>): JSX.
         open,
         title,
         children,
-        textButton,
         onOpenChange
     } = props
 
@@ -49,8 +47,8 @@ export default function DialogModal(props: PropsWithChildren<DialogModal>): JSX.
                 <DialogBody>
                     {children}
                 </DialogBody>
-                <DialogFooter><Button bg="#00476F">{textButton}</Button></DialogFooter>
+            
             </DialogContent>
         </DialogRoot>
     )
-}
+} 

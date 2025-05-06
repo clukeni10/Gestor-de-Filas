@@ -5,7 +5,7 @@ import {
   Stack,
   Input,
   Text,
-  Alert,
+
 } from "@chakra-ui/react";
 import SidebarMenu from "../components/SidebarMenu";
 import { useState } from "react";
@@ -13,6 +13,13 @@ import DialogModal from "../components/DialogModal";
 import { addDoc, collection } from "firebase/firestore";
 import { database } from "../../database/firebase";
 import { Field } from "../../../components/ui/field";
+
+/* interface Usuario {
+  nome: string;
+  email: string;
+
+} */
+
 
 export default function AdminUsers() {
   const [open, setOpen] = useState(false);
@@ -87,7 +94,7 @@ export default function AdminUsers() {
           </Button>
         </Box>
 
-        <Alert.Root status="info" title="This is the alert title">
+        {/*  <Alert.Root status="info" title="This is the alert title">
           <Alert.Indicator />
           <Alert.Title>Preencha todos os campos!</Alert.Title>
         </Alert.Root>
@@ -105,24 +112,16 @@ export default function AdminUsers() {
         Erro ao cadastrar usuário!
         </Alert.Description>
       </Alert.Content>
-    </Alert.Root>
+    </Alert.Root> */}
 
         <DialogModal
           open={open}
           onOpenChange={({ open }) => setOpen(open)}
           title="Cadastrar Usuário"
           textButton="Cadastrar"
-          footer={
-            <Button
-              bg="#00476F"
-              color="white"
-              onClick={handleSubmit}
-              loading={loading}
-            >
-              Cadastrar
-            </Button>
-          }
+
         >
+
           <Box display="flex" flexDirection="column" gap="4">
             <Box>
               <Text mb="1">Nome</Text>
@@ -140,7 +139,7 @@ export default function AdminUsers() {
               <Text mb="1">Email</Text>
               <Input
                 placeholder="Digite o email"
-                type="email"
+                type="text"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 focusRingColor="#00476F"
@@ -151,12 +150,20 @@ export default function AdminUsers() {
               <Text mb="1">Senha</Text>
               <Input
                 placeholder="Digite a senha"
-                type="password"
+                type="text"
                 value={senha}
                 onChange={(e) => setSenha(e.target.value)}
                 focusRingColor="#00476F"
               />
             </Box>
+            <Button
+              bg="#00476F"
+              color="white"
+              onClick={handleSubmit}
+              loading={loading}
+            >
+              Cadastrar
+            </Button>
           </Box>
         </DialogModal>
       </Box>
