@@ -12,7 +12,7 @@ const firebaseConfig = {
   projectId: "gestor-de-filas-3d073",
   storageBucket: "gestor-de-filas-3d073.firebasestorage.app",
   messagingSenderId: "703685234934",
-  appId: "1:703685234934:web:90aa02f2f750beaea31cd7"
+  appId: "1:703685234934:web:90aa02f2f750beaea31cd7" 
 };
 
 // Initialize Firebase

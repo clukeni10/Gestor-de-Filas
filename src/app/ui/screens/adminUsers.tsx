@@ -2,23 +2,18 @@ import {
   Box,
   Heading,
   Button,
-  Stack,
   Input,
   Text,
 
 } from "@chakra-ui/react";
 import SidebarMenu from "../components/SidebarMenu";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import DialogModal from "../components/DialogModal";
-import { addDoc, collection } from "firebase/firestore";
-import { database } from "../../database/firebase";
 import { Field } from "../../../components/ui/field";
+import { addAtendente, editAtendente, getAllAtendentes, deleteAtendente } from "../../database/userService";
+import { AtendenteType } from "@/app/types/AtendenteType";
+import { LuPen, LuTrash } from "react-icons/lu";
 
-/* interface Usuario {
-  nome: string;
-  email: string;
-
-} */
 
 
 export default function AdminUsers() {
@@ -27,6 +22,10 @@ export default function AdminUsers() {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const [atendentes, setAtendentes] = useState<AtendenteType[]>([]);
+
+
 
   const handleSubmit = async () => {
     if (!nome || !email || !senha) {
@@ -38,14 +37,7 @@ export default function AdminUsers() {
 
     try {
       // Adicionando usuário ao Firestore
-      await addDoc(collection(database, "atendentes"), {
-        nome,
-        email,
-        senha,
-        createdAt: new Date(),
-        lastLogin: new Date(),
-        updatedAt: new Date(),
-      });
+      await addAtendente(nome, email, senha);
 
       alert("Usuário cadastrado com sucesso!");
       setOpen(false);
@@ -53,12 +45,36 @@ export default function AdminUsers() {
       setEmail("");
       setSenha("");
     } catch (error) {
-      console.error("Erro ao cadastrar:", error);
+      console.log(error)
       alert("Erro ao cadastrar usuário!");
     } finally {
-      setLoading(false);
+      setLoading(false)
+    }
+
+  };
+
+
+  const buscarAtendentes = async () => {
+    try {
+      const data = await getAllAtendentes();
+      setAtendentes(data);
+    } catch (error) {
+      console.error("Erro ao buscar atendentes:", error);
     }
   };
+
+
+
+  const apagarAtendentes = async () => {
+    try{
+      
+    }
+  }
+
+  useEffect(() => {
+    buscarAtendentes();
+  }, []);
+
 
   return (
     <Box p="5">
@@ -76,7 +92,70 @@ export default function AdminUsers() {
             Registre novo usuário
           </Heading>
 
-          <Stack gap="10"></Stack>
+          <Box
+            display="flex"
+            justifyContent="space-evenly"
+            flexWrap="wrap"
+            gap="40px"
+            mt="20px"
+          >
+
+            {atendentes.map((atendente) => (
+             <Box
+             key={atendente.id}
+             bg="white"
+             borderRadius="2xl"
+             p={5}
+             w="260px"
+             minH="200px"
+             shadow="lg"
+             transition="all 0.2s"
+             _hover={{ shadow: "xl", transform: "scale(1.02)" }}
+           >
+             <Text fontWeight="bold" fontSize="lg" color="gray.700" mb={2}>
+               {atendente.nome}
+             </Text>
+             <Text fontSize="sm" color="gray.600" mb={1}>
+               <Text as="span" fontWeight="semibold">Email:</Text> {atendente.email}
+             </Text>
+             <Text fontSize="sm" color="gray.600">
+               <Text as="span" fontWeight="semibold">Último login:</Text>{" "}
+               {atendente.lastLogin
+                 ? atendente.lastLogin.toDate().toLocaleString()
+                 : "Nunca"}
+             </Text>
+           
+             <Box
+               display="flex"
+               justifyContent="flex-end"
+               alignItems="center"
+               gap="4"
+               mt="6"
+             >
+               <LuPen
+                 size={20}
+                 cursor="pointer"
+                 color="#3182CE"
+                 onClick={() => {
+                   setNome(atendente.nome);
+                   setEmail(atendente.email);
+                   setSenha(atendente.senha);
+                   setOpen(true);
+                 }}
+               />
+               <LuTrash
+                 size={20}
+                 cursor="pointer"
+                 color="#E53E3E"
+                 
+                 // onClick={() => handleDelete(atendente.id)}
+               />
+             </Box>
+           </Box>
+           
+            ))}
+          </Box>
+
 
           <Button
             bg="#00476f"
@@ -167,6 +246,6 @@ export default function AdminUsers() {
           </Box>
         </DialogModal>
       </Box>
-    </Box>
+    </Box >
   );
 }

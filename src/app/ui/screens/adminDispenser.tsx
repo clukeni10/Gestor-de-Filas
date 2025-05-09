@@ -2,7 +2,7 @@ import { Alert, Box, Button, Heading, Input, Text } from "@chakra-ui/react";
 import SidebarMenu from "../components/SidebarMenu";
 import DialogModal from "../components/DialogModal";
 import { useEffect, useState } from "react";
-import { addDoc, collection, getDocs } from "firebase/firestore";
+import { addDoc, collection, getDocs, deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { database } from "../../database/firebase";
 import { LuPen, LuTrash } from "react-icons/lu";
 
@@ -20,6 +20,8 @@ export default function AdminDispenser() {
     const [label, setLabel] = useState("");
     const [showSuccessAlert, setShowSuccessAlert] = useState(false);
     const [showErrorAlert, setShowErrorAlert] = useState(false);
+    const [editandoId, setEditandoId] = useState<string | null>(null);
+
 
     const playSound = (url: string) => {
         const audio = new Audio(url);
@@ -35,24 +37,31 @@ export default function AdminDispenser() {
         }
 
         try {
-            // Adiciona a nova opção ao banco de dados
-            await addDoc(collection(database, "opções-dispenser"), {
-                nome,
-                label,
-                criadoEm: new Date(),
-            });
+            if (editandoId) {
+                // Atualiza opção existente
+                await updateDoc(doc(database, "opções-dispenser", editandoId), {
+                    nome,
+                    label,
+                });
+            } else {
+                // Cria nova opção
+                await addDoc(collection(database, "opções-dispenser"), {
+                    nome,
+                    label,
+                    criadoEm: new Date(),
+                });
+            }
 
-            // Atualiza as opções
-            await buscarOpcoes(); // Aqui estamos recarregando as opções
-
-            // Exibe o alerta de sucesso
+            await buscarOpcoes();
             setShowSuccessAlert(true);
             playSound("/sounds/confirmation.wav");
             setTimeout(() => setShowSuccessAlert(false), 3000);
 
-            // Limpa os campos
+            // Limpa campos e fecha modal
             setNome("");
             setLabel("");
+            setEditandoId(null);
+            setOpen(false);
         } catch (error) {
             console.error("Erro:", error);
             setShowErrorAlert(true);
@@ -60,6 +69,7 @@ export default function AdminDispenser() {
             setTimeout(() => setShowErrorAlert(false), 3000);
         }
     };
+
 
 
     const [opcoes, setOpcoes] = useState<DispenserOption[]>([]);
@@ -86,6 +96,16 @@ export default function AdminDispenser() {
             console.error("Erro ao buscar opções:", error);
         } finally {
             setLoading(false);
+        }
+    };
+
+
+    const handleDelete = async (id: string) => {
+        try {
+            await deleteDoc(doc(database, "opções-dispenser", id));
+            await buscarOpcoes();
+        } catch (error) {
+            console.error("Erro ao apagar opção:", error);
         }
     };
 
@@ -139,11 +159,17 @@ export default function AdminDispenser() {
                                     >
                                         <LuPen
                                             cursor="pointer"
+                                            onClick={() => {
+                                                setNome(opcao.nome);
+                                                setLabel(opcao.label);
+                                                setEditandoId(opcao.id);
+                                                setOpen(true);
+                                            }}
                                         />
                                         <LuTrash
                                             color="red"
                                             cursor="pointer"
-
+                                            onClick={() => handleDelete(opcao.id)}
                                         />
                                     </Box>
                                 </Box>
