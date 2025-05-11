@@ -22,10 +22,14 @@ export default function AdminUsers() {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [loading, setLoading] = useState(false);
-
+  const [editandoId, setEditandoId] = useState<string | null>(null);
   const [atendentes, setAtendentes] = useState<AtendenteType[]>([]);
 
-
+  const playSound = (url: string) => {
+    const audio = new Audio(url);
+    audio.play().catch((err) => console.error("Erro ao reproduzir som:", err));
+  };
+  
 
   const handleSubmit = async () => {
     if (!nome || !email || !senha) {
@@ -67,7 +71,11 @@ export default function AdminUsers() {
 
   const apagarAtendentes = async () => {
     try{
+    await deleteAtendente(id);
+    await buscarAtendentes();
       
+    } catch(error){
+      console.log(error); 
     }
   }
 
