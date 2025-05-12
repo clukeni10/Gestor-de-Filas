@@ -3,6 +3,7 @@ import { Box, Text } from "@chakra-ui/react";
 import { useState } from "react";
 
 interface DispenserOptionProps {
+  id: string
   label: string;
   name: string;
   onClick?: (option: DispenserOptionType) => void;
@@ -16,8 +17,9 @@ export default function DispenserOption(props: DispenserOptionProps) {
       setIsSelected(!isSelected);
       
       const option: DispenserOptionType = {
+        id: props.id,
         label: props.label,
-        name: props.name,
+        nome: props.name,
       };
     
       props.onClick?.(option);

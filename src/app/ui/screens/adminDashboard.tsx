@@ -47,7 +47,7 @@ export default function AdminDashboard() {
             >
               <FaUser size="100" />
               <Text fontSize="2xl" mt="5">
-                {atendentesCount === null ? "Carregando..." : `${atendentesCount} Usuários`}
+                {atendentesCount === null ? "Carregando..." : `${atendentesCount} Atendentes`}
               </Text>
             </Box>
 
