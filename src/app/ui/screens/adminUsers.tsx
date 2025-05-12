@@ -69,7 +69,7 @@ export default function AdminUsers() {
 
 
 
-  const apagarAtendentes = async () => {
+  const apagarAtendentes = async (id: string) => {
     try{
     await deleteAtendente(id);
     await buscarAtendentes();
