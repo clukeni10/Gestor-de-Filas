@@ -1,34 +1,30 @@
 import { DispenserOptionType } from "@/app/types/DispenserOptionType";
 import { Box, Text } from "@chakra-ui/react";
-import { useState } from "react";
+
 
 interface DispenserOptionProps {
   id: string
   label: string;
   name: string;
+    isSelected: boolean;
   onClick?: (option: DispenserOptionType) => void;
 
 }
 
 export default function DispenserOption(props: DispenserOptionProps) {
-  const [isSelected, setIsSelected] = useState(false);
-
   const handleClick = () => {
-      setIsSelected(!isSelected);
-      
-      const option: DispenserOptionType = {
-        id: props.id,
-        label: props.label,
-        nome: props.name,
-      };
-    
-      props.onClick?.(option);
+    const option: DispenserOptionType = {
+      id: props.id,
+      label: props.label,
+      nome: props.name,
     };
-    
+
+    props.onClick?.(option);
+  };
 
   return (
     <Box
-      bg={isSelected ? "yellow.400" : "white"}
+      bg={props.isSelected ? "yellow.400" : "white"}
       w="400px"
       h="80px"
       rounded="md"

@@ -70,8 +70,8 @@ export const useOptionState = create<Actions & State>((set) => ({
         });
         
         // Add service type (ATENDIMENTO GERAL)
-        page.drawText(option.name, {
-          x: centerX - helveticaBold.widthOfTextAtSize(option.name, titleFontSize) / 2,
+        page.drawText(option.nome, {
+          x: centerX - helveticaBold.widthOfTextAtSize(option.nome, titleFontSize) / 2,
           y: height - 140,
           size: titleFontSize,
           font: helveticaBold,
