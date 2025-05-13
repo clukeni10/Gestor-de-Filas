@@ -10,6 +10,7 @@ export const addAtendente = async (nome: string, email: string, senha: string) =
         createdAt: new Date(),
         lastLogin: new Date(),
         updatedAt: new Date(),
+        
     };
 
     return await addDoc(collection(database, "atendentes"), data);
@@ -18,10 +19,10 @@ export const addAtendente = async (nome: string, email: string, senha: string) =
 export const getAllAtendentes = async (): Promise<AtendenteType[]> => {
     const snapshot = await getDocs(collection(database, "atendentes"));
     return snapshot.docs.map((doc) => ({
-      id: doc.id,
+      id: doc.id, 
       ...doc.data(),
     })) as AtendenteType[];
-  };
+  }; 
 
 
 export const editAtendente = async (id: string, nome: string, email: string, senha: string) => {

@@ -7,6 +7,7 @@ import SmallerCards from "../components/SmallerCards";
 import { FaUser } from "react-icons/fa6";
 import { MdDesk } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
+import { TfiTicket } from "react-icons/tfi";
 
 export default function HomeScreen(): JSX.Element {
   const navigate = useNavigate();
@@ -22,7 +23,7 @@ export default function HomeScreen(): JSX.Element {
       <Flex justifyContent="space-evenly" mt="5">
         <Cards title="TV">{<IoMdTv size="150" color="black" onClick={() => navigate("/tv")} cursor="pointer" />}</Cards>
 
-        <Cards title="Dispensador">{<IoMdTv size="150" color="black" onClick={() => navigate("/dispenser")} cursor="pointer"/>}</Cards>
+        <Cards title="Dispensador">{<TfiTicket  size="150" color="black" onClick={() => navigate("/dispenser")} cursor="pointer"/>}</Cards>
       </Flex>
 
       <Flex justifyContent="space-between" alignItems="center" mt="5">

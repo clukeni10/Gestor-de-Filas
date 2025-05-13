@@ -16,7 +16,7 @@ export const addOption = async (nome: string, label: string) => {
 export const getAllOptions = async (): Promise<DispenserOptionType[]> => {
       const snapshot = await getDocs(collection(database, "opções-dispenser"));
       return snapshot.docs.map((doc) => ({
-      id: doc.id,
+      id: doc.id, 
       ...doc.data(),
     })) as DispenserOptionType[];
 };

@@ -1,4 +1,4 @@
-import { Alert, Box, Button, Heading, Input, Text } from "@chakra-ui/react";
+import { Alert, Box, Button, Heading, Input, Table, Text } from "@chakra-ui/react";
 import SidebarMenu from "../components/SidebarMenu";
 import DialogModal from "../components/DialogModal";
 import { useEffect, useState } from "react";
@@ -23,61 +23,61 @@ export default function AdminDispenser() {
     audio.play().catch((err) => console.error("Erro ao reproduzir som:", err));
   };
 
- const handleSubmit = async () => {
-  if (!nome || !label) {
-    setShowErrorAlert(true);
-    playSound("/sounds/error.wav");
-    setTimeout(() => setShowErrorAlert(false), 3000);
-    return;
-  }
-
-  try {
-    if (editandoId) {
-      await editOption(editandoId, nome, label);
-    } else {
-      await addOption(nome, label);
+  const handleSubmit = async () => {
+    if (!nome || !label) {
+      setShowErrorAlert(true);
+      playSound("/sounds/error.wav");
+      setTimeout(() => setShowErrorAlert(false), 3000);
+      return;
     }
 
-    await buscarOpcoes();
-    setShowSuccessAlert(true);
-    playSound("/sounds/confirmation.wav");
-    setTimeout(() => setShowSuccessAlert(false), 3000);
+    try {
+      if (editandoId) {
+        await editOption(editandoId, nome, label);
+      } else {
+        await addOption(nome, label);
+      }
 
-    setNome("");
-    setLabel("");
-    setEditandoId(null);
-    setOpen(false);
-  } catch (error) {
-    console.error("Erro:", error);
-    setShowErrorAlert(true);
-    playSound("/sounds/error.wav");
-    setTimeout(() => setShowErrorAlert(false), 3000);
-  }
-};
+      await buscarOpcoes();
+      setShowSuccessAlert(true);
+      playSound("/sounds/confirmation.wav");
+      setTimeout(() => setShowSuccessAlert(false), 3000);
+
+      setNome("");
+      setLabel("");
+      setEditandoId(null);
+      setOpen(false);
+    } catch (error) {
+      console.error("Erro:", error);
+      setShowErrorAlert(true);
+      playSound("/sounds/error.wav");
+      setTimeout(() => setShowErrorAlert(false), 3000);
+    }
+  };
 
 
- 
 
- const buscarOpcoes = async () => {
-  try {
-    const lista = await getAllOptions();
-    setOpcoes(lista);
-  } catch (error) {
-    console.error("Erro ao buscar opções:", error);
-  } finally {
-    setLoading(false);
-  }
-};
+
+  const buscarOpcoes = async () => {
+    try {
+      const lista = await getAllOptions();
+      setOpcoes(lista);
+    } catch (error) {
+      console.error("Erro ao buscar opções:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
 
   const handleDelete = async (id: string) => {
-  try {
-    await deleteOption(id);
-    await buscarOpcoes();
-  } catch (error) {
-    console.error("Erro ao apagar opção:", error);
-  }
-};
+    try {
+      await deleteOption(id);
+      await buscarOpcoes();
+    } catch (error) {
+      console.error("Erro ao apagar opção:", error);
+    }
+  };
 
 
   useEffect(() => {
@@ -97,53 +97,54 @@ export default function AdminDispenser() {
             <Text>Nenhuma opção cadastrada.</Text>
           ) : (
             <Box
-              display="flex"
-              justifyContent="space-evenly"
-              flexWrap="wrap"
-              gap="40px"
+              p="2"
               mt="20px"
             >
-              {opcoes.map((opcao) => (
-                <Box
-                  key={opcao.id}
-                  bg="white"
-                  borderRadius="md"
-                  p={5}
-                  w="200px"
-                  h="130px"
-                  shadow="md"
-                >
-                  <Text>
-                    <Text as="span" fontWeight="bold">
-                      Nome:
-                    </Text>{" "}
-                    {opcao.nome}
-                  </Text>
-                  <Text>
-                    <Text as="span" fontWeight="bold">
-                      Label:
-                    </Text>{" "}
-                    {opcao.label}
-                  </Text>
+              <Table.Root showColumnBorder>
+                <Table.Header>
+                  <Table.Row>
+                    <Table.ColumnHeader bg="#00476F" color="white">ID</Table.ColumnHeader>
+                    <Table.ColumnHeader bg="#00476F" color="white">Nome</Table.ColumnHeader>
+                    <Table.ColumnHeader bg="#00476F" color="white">Label</Table.ColumnHeader>
+                    <Table.ColumnHeader bg="#00476F" color="white">Criado Em</Table.ColumnHeader>
+                    <Table.ColumnHeader bg="#00476F" color="white">Atualizado Em</Table.ColumnHeader>
+                    <Table.ColumnHeader bg="#00476F" color="white">Ações</Table.ColumnHeader>
+                  </Table.Row>
+                </Table.Header>
+                <Table.Body>
+                  {opcoes.map((opcao, index) => (
+                    <Table.Row key={opcao.id}>
+                      <Table.Cell>{index + 1}</Table.Cell>
+                      <Table.Cell>{opcao.nome}</Table.Cell>
+                      <Table.Cell>{opcao.label}</Table.Cell>
+                      <Table.Cell>{opcao.createdAt ? opcao.createdAt.toDate().toLocaleString() : "Data não disponível"}</Table.Cell>
+                      <Table.Cell>{opcao.updatedAt ? opcao.updatedAt.toDate().toLocaleString() : "Data não disponível"}</Table.Cell>
+                      <Table.Cell display="flex" gap="10px">
+                        <LuPen
+                          size={20}
+                          cursor="pointer"
+                          onClick={() => {
+                            setNome(opcao.nome);
+                            setLabel(opcao.label);
+                            setEditandoId(opcao.id);
+                            setOpen(true);
+                          }}
+                        />
+                        <LuTrash
+                          size={20}
+                          color="red"
+                          cursor="pointer"
+                          onClick={() => handleDelete(opcao.id)}
+                        />
+                      </Table.Cell>
 
-                  <Box display="flex" justifyContent="space-between" mt="10px">
-                    <LuPen
-                      cursor="pointer"
-                      onClick={() => {
-                        setNome(opcao.nome);
-                        setLabel(opcao.label);
-                        setEditandoId(opcao.id);
-                        setOpen(true);
-                      }}
-                    />
-                    <LuTrash
-                      color="red"
-                      cursor="pointer"
-                      onClick={() => handleDelete(opcao.id)}
-                    />
-                  </Box>
-                </Box>
-              ))}
+
+                    </Table.Row>
+                  ))}
+
+                </Table.Body>
+              </Table.Root>
+
             </Box>
           )}
         </Box>

@@ -4,6 +4,8 @@ import {
   Button,
   Input,
   Text,
+  Table,
+  Alert,
 
 } from "@chakra-ui/react";
 import SidebarMenu from "../components/SidebarMenu";
@@ -22,6 +24,8 @@ export default function AdminUsers() {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showSuccessAlert, setShowSuccessAlert] = useState(false);
+  const [showErrorAlert, setShowErrorAlert] = useState(false);
   const [editandoId, setEditandoId] = useState<string | null>(null);
   const [atendentes, setAtendentes] = useState<AtendenteType[]>([]);
 
@@ -29,28 +33,41 @@ export default function AdminUsers() {
     const audio = new Audio(url);
     audio.play().catch((err) => console.error("Erro ao reproduzir som:", err));
   };
-  
+
 
   const handleSubmit = async () => {
     if (!nome || !email || !senha) {
-      alert("Preencha todos os campos!");
+      setShowErrorAlert(true);
+      playSound("/sounds/error.wav");
+      setTimeout(() => setShowErrorAlert(false), 3000);
       return;
     }
 
     setLoading(true);
 
     try {
-      // Adicionando usuário ao Firestore
-      await addAtendente(nome, email, senha);
+      if (editandoId) {
+        await editAtendente(editandoId, nome, email, senha);
+      } else {
+        await addAtendente(nome, email, senha);
+      }
 
-      alert("Usuário cadastrado com sucesso!");
+      await buscarAtendentes();
+      setShowSuccessAlert(true);
+      playSound("/sounds/confirmation.wav");
+      setTimeout(() => setShowSuccessAlert(false), 3000);
+
+
       setOpen(false);
       setNome("");
       setEmail("");
       setSenha("");
+      setEditandoId(null);
     } catch (error) {
-      console.log(error)
-      alert("Erro ao cadastrar usuário!");
+      console.error("Erro:", error);
+      setShowErrorAlert(true);
+      playSound("/sounds/error.wav");
+      setTimeout(() => setShowErrorAlert(false), 3000);
     } finally {
       setLoading(false)
     }
@@ -64,20 +81,23 @@ export default function AdminUsers() {
       setAtendentes(data);
     } catch (error) {
       console.error("Erro ao buscar atendentes:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
 
 
-  const apagarAtendentes = async (id: string) => {
-    try{
-    await deleteAtendente(id);
-    await buscarAtendentes();
-      
-    } catch(error){
-      console.log(error); 
+  const handleDelete = async (id: string) => {
+    try {
+      await deleteAtendente(id);
+      await buscarAtendentes();
+    } catch (error) {
+      console.log(error);
     }
   }
+
+
 
   useEffect(() => {
     buscarAtendentes();
@@ -101,67 +121,58 @@ export default function AdminUsers() {
           </Heading>
 
           <Box
-            display="flex"
-            justifyContent="space-evenly"
-            flexWrap="wrap"
-            gap="40px"
             mt="20px"
+            p="2"
           >
+            <Table.Root showColumnBorder>
+              <Table.Header>
+                <Table.Row>
+                  <Table.ColumnHeader bg="#00476F" color="white">ID</Table.ColumnHeader>
+                  <Table.ColumnHeader bg="#00476F" color="white">Nome</Table.ColumnHeader>
+                  <Table.ColumnHeader bg="#00476F" color="white">E-mail</Table.ColumnHeader>
+                  <Table.ColumnHeader bg="#00476F" color="white">Senha</Table.ColumnHeader>
+                  <Table.ColumnHeader bg="#00476F" color="white">Criado Em</Table.ColumnHeader>
+                  <Table.ColumnHeader bg="#00476F" color="white">Atualizado Em</Table.ColumnHeader>
+                  <Table.ColumnHeader bg="#00476F" color="white">Último Log</Table.ColumnHeader>
+                  <Table.ColumnHeader bg="#00476F" color="white">Ações</Table.ColumnHeader>
+                </Table.Row>
+              </Table.Header>
+              <Table.Body>
+                {atendentes.map((atendente, index) => (
+                  <Table.Row key={atendente.id}>
+                    <Table.Cell>{index + 1}</Table.Cell>
+                    <Table.Cell>{atendente.nome}</Table.Cell>
+                    <Table.Cell>{atendente.email}</Table.Cell>
+                    <Table.Cell>{atendente.senha}</Table.Cell>
+                    <Table.Cell>{atendente.createdAt ? atendente.createdAt.toDate().toLocaleString() : "Data não disponível"}</Table.Cell>
+                    <Table.Cell>{atendente.updatedAt ? atendente.updatedAt.toDate().toLocaleString() : "Data não disponível"}</Table.Cell>
+                    <Table.Cell>{atendente.lastLogin ? atendente.lastLogin.toDate().toLocaleString() : "Data não disponível"}</Table.Cell>
+                    <Table.Cell display="flex" gap="10px"><LuPen
+                      size={20}
+                      cursor="pointer"
+                      color="#3182CE"
+                      onClick={() => {
+                        setNome(atendente.nome);
+                        setEmail(atendente.email);
+                        setSenha(atendente.senha);
+                        setOpen(true);
+                      }}
+                    />
+                      <LuTrash
+                        size={20}
+                        cursor="pointer"
+                        color="#E53E3E"
 
-            {atendentes.map((atendente) => (
-             <Box
-             key={atendente.id}
-             bg="white"
-             borderRadius="2xl"
-             p={5}
-             w="260px"
-             minH="200px"
-             shadow="lg"
-             transition="all 0.2s"
-             _hover={{ shadow: "xl", transform: "scale(1.02)" }}
-           >
-             <Text fontWeight="bold" fontSize="lg" color="gray.700" mb={2}>
-               {atendente.nome}
-             </Text>
-             <Text fontSize="sm" color="gray.600" mb={1}>
-               <Text as="span" fontWeight="semibold">Email:</Text> {atendente.email}
-             </Text>
-             <Text fontSize="sm" color="gray.600">
-               <Text as="span" fontWeight="semibold">Último login:</Text>{" "}
-               {atendente.lastLogin
-                 ? atendente.lastLogin.toDate().toLocaleString()
-                 : "Nunca"}
-             </Text>
-           
-             <Box
-               display="flex"
-               justifyContent="flex-end"
-               alignItems="center"
-               gap="4"
-               mt="6"
-             >
-               <LuPen
-                 size={20}
-                 cursor="pointer"
-                 color="#3182CE"
-                 onClick={() => {
-                   setNome(atendente.nome);
-                   setEmail(atendente.email);
-                   setSenha(atendente.senha);
-                   setOpen(true);
-                 }}
-               />
-               <LuTrash
-                 size={20}
-                 cursor="pointer"
-                 color="#E53E3E"
-                 
-                 // onClick={() => handleDelete(atendente.id)}
-               />
-             </Box>
-           </Box>
-           
-            ))}
+                        onClick={() => handleDelete(atendente.id)}
+                      />
+                    </Table.Cell>
+
+                  </Table.Row>
+                ))}
+
+              </Table.Body>
+            </Table.Root>
+
           </Box>
 
 
@@ -181,25 +192,43 @@ export default function AdminUsers() {
           </Button>
         </Box>
 
-        {/*  <Alert.Root status="info" title="This is the alert title">
-          <Alert.Indicator />
-          <Alert.Title>Preencha todos os campos!</Alert.Title>
-        </Alert.Root>
-
-        <Alert.Root status="success" variant="solid">
-          <Alert.Indicator />
-          <Alert.Title>Usuário cadastrado com sucesso!</Alert.Title>
-        </Alert.Root>
-
-        <Alert.Root status="error">
-      <Alert.Indicator />
-      <Alert.Content>
-        <Alert.Title>Erro</Alert.Title>
-        <Alert.Description>
-        Erro ao cadastrar usuário!
-        </Alert.Description>
-      </Alert.Content>
-    </Alert.Root> */}
+        {showSuccessAlert && (
+               <Alert.Root
+                 status="success"
+                 variant="solid"
+                 position="fixed"
+                 bottom="20px"
+                 right="20px"
+                 w="auto"
+                 h="auto"
+                 p="4"
+                 rounded="md"
+                 boxShadow="md"
+                 zIndex={9999}
+               >
+                 <Alert.Indicator />
+                 <Alert.Title>Usuário cadastrado com sucesso!</Alert.Title>
+               </Alert.Root>
+             )}
+       
+             {showErrorAlert && (
+               <Alert.Root
+                 status="error"
+                 variant="solid"
+                 position="fixed"
+                 bottom="20px"
+                 right="20px"
+                 w="auto"
+                 h="auto"
+                 p="4"
+                 rounded="md"
+                 boxShadow="md"
+                 zIndex={9999}
+               >
+                 <Alert.Indicator />
+                 <Alert.Title>Preencha todos os campos!</Alert.Title>
+               </Alert.Root>
+             )}
 
         <DialogModal
           open={open}
