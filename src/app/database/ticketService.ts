@@ -56,26 +56,22 @@ export const generateNextTicketNumber = async (nome: string): Promise<string> =>
     return `${letra}${next}`;
 };
 
-// Agrupa tickets por prefixo (A, B, C, D, E)
-export const fetchTicketsAgrupados = async () => {
-    const ticketsRef = collection(database, "tickets");
-    const q = query(ticketsRef, where("status", "==", "pendente"), orderBy("dataHora"));
-    const snapshot = await getDocs(q);
+export async function fetchTicketsAgrupados() {
+  const q = query(collection(database, "tickets"), where("status", "==", "pendente"));
+  const snapshot = await getDocs(q);
 
-    const tickets: Ticket[] = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-    })) as Ticket[];
+  const agrupado: { [letra: string]: Ticket[] } = {};
 
-    const agrupados: { [prefixo: string]: Ticket[] } = {};
+  snapshot.forEach(doc => {
+    const data = doc.data() as Ticket;
+    const letra = data.numero.charAt(0); // assume que o número começa com "A101", "B002", etc.
 
-    tickets.forEach(ticket => {
-        const prefixo = ticket.numero.charAt(0); // Pega o A, B, C...
-        if (!agrupados[prefixo]) {
-            agrupados[prefixo] = [];
-        }
-        agrupados[prefixo].push(ticket);
-    });
+    if (!agrupado[letra]) {
+      agrupado[letra] = [];
+    }
 
-    return agrupados; // Exemplo: { A: [Ticket, ...], B: [...], ... }
-};
+    agrupado[letra].push({ ...data, id: doc.id });
+  });
+
+  return agrupado;
+}

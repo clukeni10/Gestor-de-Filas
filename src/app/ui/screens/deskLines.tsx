@@ -16,7 +16,7 @@ export default function DeskLines() {
   return (
     <Box 
         w="100%"
-        mx="auto" 
+        mx="auto"  
         overflow="hidden"
         
     >

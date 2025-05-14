@@ -169,8 +169,11 @@ export default function TV() {
                 >
                     <Flex flexDirection="column" alignItems="center">
                         <Text color="white" fontSize="4xl">Atendimento Geral</Text>
+
                         <Text fontSize="8xl" fontWeight="bold">
-                            {filaPorLetra["A"] ? filaPorLetra["A"]?.numero : "--"}
+                            {filaPorLetra["A"]?.length
+                                ? `${filaPorLetra["A"].at(-1)?.numero.charAt(0)} ${filaPorLetra["A"].at(-1)?.numero.slice(1)}`
+                                : "--"}
                         </Text>
                     </Flex>
                 </Box>
@@ -189,8 +192,11 @@ export default function TV() {
 
                     <Flex flexDirection="column" alignItems="center">
                         <Text color="white" fontSize="4xl">Marcação de Consultas</Text>
+
                         <Text fontSize="8xl" fontWeight="bold">
-                            {filaPorLetra["B"] ? filaPorLetra["B"]?.numero : "--"}
+                            {filaPorLetra["B"]?.length
+                                ? `${filaPorLetra["B"].at(-1)?.numero.charAt(0)} ${filaPorLetra["B"].at(-1)?.numero.slice(1)}`
+                                : "--"}
                         </Text>
                     </Flex>
                 </Box>
@@ -209,8 +215,11 @@ export default function TV() {
 
                     <Flex flexDirection="column" alignItems="center">
                         <Text color="white" fontSize="4xl">Urgências</Text>
+
                         <Text fontSize="8xl" fontWeight="bold">
-                            {filaPorLetra["C"] ? filaPorLetra["C"]?.numero : "--"}
+                            {filaPorLetra["C"]?.length
+                                ? `${filaPorLetra["C"].at(-1)?.numero.charAt(0)} ${filaPorLetra["C"].at(-1)?.numero.slice(1)}`
+                                : "--"}
                         </Text>
                     </Flex>
                 </Box>
@@ -229,8 +238,11 @@ export default function TV() {
 
                     <Flex flexDirection="column" alignItems="center">
                         <Text color="white" fontSize="4xl">Exames</Text>
+
                         <Text fontSize="8xl" fontWeight="bold">
-                            {filaPorLetra["D"] ? filaPorLetra["D"]?.numero : "--"}
+                            {filaPorLetra["D"]?.length
+                                ? `${filaPorLetra["D"].at(-1)?.numero.charAt(0)} ${filaPorLetra["D"].at(-1)?.numero.slice(1)}`
+                                : "--"}
                         </Text>
                     </Flex>
                 </Box>
