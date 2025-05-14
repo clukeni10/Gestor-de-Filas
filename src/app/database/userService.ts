@@ -7,7 +7,7 @@ export const addAtendente = async (nome: string, email: string, senha: string) =
         nome,
         email,
         senha,
-        createdAt: new Date(),
+        createdAt: new Date(), 
         lastLogin: new Date(),
         updatedAt: new Date(),
         

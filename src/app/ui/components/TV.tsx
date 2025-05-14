@@ -1,8 +1,15 @@
-import { Box, Flex, Image, Text } from "@chakra-ui/react";
+/* import { useFilaStore } from "../../hooks/useFilaState";
+ */import { Box, Flex, Image, Text } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 
 export default function TV() {
     const [time, setTime] = useState<string>("");
+   /*  const fila = useFilaStore((state) => state.fila);
+    const [atendimento, setAtendimento] = useState<string>("");
+    const [consultas, setConsultas] = useState<string>("");
+    const [exames, setExames] = useState<string>("");
+    const [urgencias, setUrgencias] = useState<string>("");
+    const [informacoes, setInformacoes] = useState<string>(""); */
 
     useEffect(() => {
         const updateTime = () => {
@@ -145,8 +152,8 @@ export default function TV() {
                     justifyContent="center"
                 >
                     <Flex flexDirection="column" alignItems="center">
-                    <Text color="white" fontSize="4xl">Atendimento Geral</Text>
-                    
+                        <Text color="white" fontSize="4xl">Atendimento Geral</Text>
+
                         <Text fontSize="8xl" fontWeight="bold">A 19</Text>
                     </Flex>
                 </Box>
@@ -162,10 +169,10 @@ export default function TV() {
                     alignItems="center"
                     justifyContent="center"
                 >
-                    
+
                     <Flex flexDirection="column" alignItems="center">
-                    <Text color="white" fontSize="4xl">Marcação de Consultas</Text>
-                    
+                        <Text color="white" fontSize="4xl">Marcação de Consultas</Text>
+
                         <Text fontSize="8xl" fontWeight="bold">B 4</Text>
                     </Flex>
                 </Box>
@@ -181,10 +188,10 @@ export default function TV() {
                     alignItems="center"
                     justifyContent="center"
                 >
-                    
+
                     <Flex flexDirection="column" alignItems="center">
-                    <Text color="white" fontSize="4xl">Urgências</Text>
-                    
+                        <Text color="white" fontSize="4xl">Urgências</Text>
+
                         <Text fontSize="8xl" fontWeight="bold">C 75</Text>
                     </Flex>
                 </Box>
@@ -200,16 +207,16 @@ export default function TV() {
                     alignItems="center"
                     justifyContent="center"
                 >
-                    
+
                     <Flex flexDirection="column" alignItems="center">
-                    <Text color="white" fontSize="4xl">Exames</Text>
-                    
+                        <Text color="white" fontSize="4xl">Exames</Text>
+
                         <Text fontSize="8xl" fontWeight="bold">D 25</Text>
                     </Flex>
                 </Box>
             </Box>
 
-            <Text  gridColumn="1 / -1" fontSize="5xl" textAlign="center">Aguarde a sua vez com atenção ao visor.</Text>
+            <Text gridColumn="1 / -1" fontSize="5xl" textAlign="center">Aguarde a sua vez com atenção ao visor.</Text>
         </Box>
 
     )

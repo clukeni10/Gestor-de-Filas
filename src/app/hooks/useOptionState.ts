@@ -5,20 +5,24 @@ import { PDFDocument, rgb, StandardFonts } from "pdf-lib"
 const initialState: State = {
   options: [],
   selectedOption: null,
-  refresh: 0
+  refresh: 0,
+  currentDateTime: "",
 }
 
 interface State {
   options: DispenserOptionType[]
   selectedOption: DispenserOptionType | null
   refresh: number
+  currentDateTime: string;
 }
 
 interface Actions {
   setSelectedOption: (option: DispenserOptionType) => void
   clearSelectedOption: () => void
-  generateTicketPVC: (option: DispenserOptionType) => Promise<Uint8Array>
+  generateTicketPVC: (option: DispenserOptionType, numero: string) => Promise<Uint8Array>
   forceRefresh: () => void
+  setDateTime: (dateTime: string) => void;
+
 }
 
 export const useOptionState = create<Actions & State>((set) => ({
@@ -27,7 +31,8 @@ export const useOptionState = create<Actions & State>((set) => ({
     return ({ selectedOption })
   }),
   clearSelectedOption: () => set(() => ({ selectedOption: null })),
-  generateTicketPVC: async (option: DispenserOptionType) => {
+  setDateTime: (currentDateTime: string) => set(() => ({ currentDateTime })),
+  generateTicketPVC: async (option: DispenserOptionType, numero: string) => {
 
     const pdfDoc = await PDFDocument.create();
     const page = pdfDoc.addPage([300, 400]);
@@ -45,6 +50,7 @@ export const useOptionState = create<Actions & State>((set) => ({
     const { width, height } = page.getSize();
     const centerX = width / 2;
 
+    console.log(option);
     // Add welcome text
     page.drawText(`Bem-Vindo a`, {
       x: centerX - helveticaFont.widthOfTextAtSize(`Bem-Vindo a`, fontSize) / 2,
@@ -82,13 +88,14 @@ export const useOptionState = create<Actions & State>((set) => ({
     });
 
     // Add ticket number (A 20)
-    page.drawText("ticketNumber", {
-      x: centerX - helveticaBold.widthOfTextAtSize("ticketNumber", ticketNumberFontSize) / 2,
+    page.drawText(numero, {
+      x: centerX - helveticaBold.widthOfTextAtSize(numero, ticketNumberFontSize) / 2,
       y: height - 200,
       size: ticketNumberFontSize,
       font: helveticaBold,
       color: rgb(0, 0, 0),
     });
+
 
     // Add queue info
     const queueText = `10 pessoas à frente`;
@@ -110,7 +117,7 @@ export const useOptionState = create<Actions & State>((set) => ({
     });
 
     // Add date and time
-    const dateTimeText = `10:40`;
+    const dateTimeText = useOptionState.getState().currentDateTime || "--:--";
     page.drawText(dateTimeText, {
       x: centerX - helveticaFont.widthOfTextAtSize(dateTimeText, fontSize) / 2,
       y: height - 300,
@@ -119,21 +126,15 @@ export const useOptionState = create<Actions & State>((set) => ({
       color: rgb(0, 0, 0),
     });
 
-    // Draw bottom line
-    page.drawLine({
-      start: { x: 20, y: height - 320 },
-      end: { x: width - 20, y: height - 320 },
-      thickness: 2,
-      color: rgb(0, 0, 1), // Blue color
-    });
+   
 
     // Serialize the PDFDocument to bytes
     return await pdfDoc.save();
 
   },
   forceRefresh: () => {
-        set((state) => ({ refresh: state.refresh + 1 }))
-    }
+    set((state) => ({ refresh: state.refresh + 1 }))
+  }
 
 
 
