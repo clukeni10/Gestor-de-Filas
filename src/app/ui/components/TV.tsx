@@ -1,15 +1,17 @@
 /* import { useFilaStore } from "../../hooks/useFilaState";
- */import { Box, Flex, Image, Text } from "@chakra-ui/react";
+ */import { fetchTicketsAgrupados, Ticket } from "../../database/ticketService";
+import { Box, Flex, Image, Text } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 
 export default function TV() {
     const [time, setTime] = useState<string>("");
-   /*  const fila = useFilaStore((state) => state.fila);
-    const [atendimento, setAtendimento] = useState<string>("");
-    const [consultas, setConsultas] = useState<string>("");
-    const [exames, setExames] = useState<string>("");
-    const [urgencias, setUrgencias] = useState<string>("");
-    const [informacoes, setInformacoes] = useState<string>(""); */
+    const [filaPorLetra, setFilaPorLetra] = useState<{ [letra: string]: Ticket[] }>({});
+    /*  const fila = useFilaStore((state) => state.fila);
+     const [atendimento, setAtendimento] = useState<string>("");
+     const [consultas, setConsultas] = useState<string>("");
+     const [exames, setExames] = useState<string>("");
+     const [urgencias, setUrgencias] = useState<string>("");
+     const [informacoes, setInformacoes] = useState<string>(""); */
 
     useEffect(() => {
         const updateTime = () => {
@@ -25,6 +27,20 @@ export default function TV() {
 
         return () => clearInterval(interval);
     }, []);
+
+    useEffect(() => {
+        const carregarFila = async () => {
+            const resultado = await fetchTicketsAgrupados();
+            setFilaPorLetra(resultado);
+        };
+
+        carregarFila();
+
+        // Atualizar a cada X segundos (ex: 5s)
+        const interval = setInterval(carregarFila, 5000);
+        return () => clearInterval(interval);
+    }, []);
+
     return (
         <Box
             p="5"
@@ -153,8 +169,9 @@ export default function TV() {
                 >
                     <Flex flexDirection="column" alignItems="center">
                         <Text color="white" fontSize="4xl">Atendimento Geral</Text>
-
-                        <Text fontSize="8xl" fontWeight="bold">A 19</Text>
+                        <Text fontSize="8xl" fontWeight="bold">
+                            {filaPorLetra["A"] ? filaPorLetra["A"]?.numero : "--"}
+                        </Text>
                     </Flex>
                 </Box>
 
@@ -172,8 +189,9 @@ export default function TV() {
 
                     <Flex flexDirection="column" alignItems="center">
                         <Text color="white" fontSize="4xl">Marcação de Consultas</Text>
-
-                        <Text fontSize="8xl" fontWeight="bold">B 4</Text>
+                        <Text fontSize="8xl" fontWeight="bold">
+                            {filaPorLetra["B"] ? filaPorLetra["B"]?.numero : "--"}
+                        </Text>
                     </Flex>
                 </Box>
 
@@ -191,8 +209,9 @@ export default function TV() {
 
                     <Flex flexDirection="column" alignItems="center">
                         <Text color="white" fontSize="4xl">Urgências</Text>
-
-                        <Text fontSize="8xl" fontWeight="bold">C 75</Text>
+                        <Text fontSize="8xl" fontWeight="bold">
+                            {filaPorLetra["C"] ? filaPorLetra["C"]?.numero : "--"}
+                        </Text>
                     </Flex>
                 </Box>
 
@@ -210,8 +229,9 @@ export default function TV() {
 
                     <Flex flexDirection="column" alignItems="center">
                         <Text color="white" fontSize="4xl">Exames</Text>
-
-                        <Text fontSize="8xl" fontWeight="bold">D 25</Text>
+                        <Text fontSize="8xl" fontWeight="bold">
+                            {filaPorLetra["D"] ? filaPorLetra["D"]?.numero : "--"}
+                        </Text>
                     </Flex>
                 </Box>
             </Box>

@@ -2,11 +2,12 @@ import { Box, Text, Flex, Image } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import DispenserOption from "../components/DispenserOption";
 import { DispenserOptionType } from "@/app/types/DispenserOptionType";
-import { getAllOptions } from "../../database/optionService";
 import { useOptionState } from "../../hooks/useOptionState";
 import { generateNextTicketNumber, saveTicket } from "../../database/ticketService";
 import { useTicketStore } from "../../hooks/useTicketState";
 import { useFilaStore } from "../../hooks/useFilaState";
+import { database } from "../../database/firebase";
+import { onSnapshot, collection } from "firebase/firestore";
 
 export default function Dispenser() {
   const [time, setTime] = useState<string>("");
@@ -55,7 +56,7 @@ export default function Dispenser() {
       return;
     }
 
-    popup.document.write(`
+    popup.document.body.innerHTML = `
       <html>
         <head>
           <title>Bilhete</title>
@@ -81,7 +82,7 @@ export default function Dispenser() {
           <iframe src="${url}" frameborder="0"></iframe>
         </body>
       </html>
-    `);
+    `;
 
     setTimeout(() => {
       URL.revokeObjectURL(url);
@@ -110,17 +111,19 @@ export default function Dispenser() {
     return () => clearInterval(interval);
   }, [setDateTime]);
 
-  useEffect(() => {
-    const fetchOptions = async () => {
-      try {
-        const fetchedOptions = await getAllOptions();
-        setOptions(fetchedOptions);
-      } catch (error) {
-        console.error("Erro ao buscar as opções:", error);
-      }
-    };
 
-    fetchOptions();
+  useEffect(() => {
+    const unsubscribe = onSnapshot(collection(database, "opções-dispenser"), (snapshot) => {
+      const updatedOptions = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      })) as DispenserOptionType[];
+
+      setOptions(updatedOptions);
+    });
+
+    // Limpar escuta quando o componente for desmontado
+    return () => unsubscribe();
   }, []);
 
   return (
