@@ -6,17 +6,22 @@ import {
   Text,
   Table,
   Alert,
-
 } from "@chakra-ui/react";
 import SidebarMenu from "../components/SidebarMenu";
 import { useState, useEffect } from "react";
 import DialogModal from "../components/DialogModal";
 import { Field } from "../../../components/ui/field";
-import { addAtendente, editAtendente, getAllAtendentes, deleteAtendente } from "../../database/userService";
+import {
+  addAtendente,
+  editAtendente,
+  getAllAtendentes,
+  deleteAtendente,
+} from "../../database/userService";
+import {  auth } from "../../database/firebase"; 
 import { AtendenteType } from "@/app/types/AtendenteType";
 import { LuPen, LuTrash } from "react-icons/lu";
-
-
+import { onAuthStateChanged } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
 
 export default function AdminUsers() {
   const [open, setOpen] = useState(false);
@@ -28,12 +33,26 @@ export default function AdminUsers() {
   const [showErrorAlert, setShowErrorAlert] = useState(false);
   const [editandoId, setEditandoId] = useState<string | null>(null);
   const [atendentes, setAtendentes] = useState<AtendenteType[]>([]);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Verifica o usuário logado
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        // Se não estiver logado, redireciona para "/"
+        navigate("/", { replace: true });
+      } else {
+        setLoading(false); // Usuário está logado, libera a tela
+      }
+    });
+
+    return () => unsubscribe(); // Cleanup do listener ao desmontar componente
+  }, [navigate]);
 
   const playSound = (url: string) => {
     const audio = new Audio(url);
     audio.play().catch((err) => console.error("Erro ao reproduzir som:", err));
   };
-
 
   const handleSubmit = async () => {
     if (!nome || !email || !senha) {
@@ -57,7 +76,6 @@ export default function AdminUsers() {
       playSound("/sounds/confirmation.wav");
       setTimeout(() => setShowSuccessAlert(false), 3000);
 
-
       setOpen(false);
       setNome("");
       setEmail("");
@@ -69,11 +87,9 @@ export default function AdminUsers() {
       playSound("/sounds/error.wav");
       setTimeout(() => setShowErrorAlert(false), 3000);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-
   };
-
 
   const buscarAtendentes = async () => {
     try {
@@ -86,8 +102,6 @@ export default function AdminUsers() {
     }
   };
 
-
-
   const handleDelete = async (id: string) => {
     try {
       await deleteAtendente(id);
@@ -95,14 +109,11 @@ export default function AdminUsers() {
     } catch (error) {
       console.log(error);
     }
-  }
-
-
+  };
 
   useEffect(() => {
     buscarAtendentes();
   }, []);
-
 
   return (
     <Box p="5">
@@ -120,21 +131,34 @@ export default function AdminUsers() {
             Registre novo usuário
           </Heading>
 
-          <Box
-            mt="20px"
-            p="2"
-          >
+          <Box mt="20px" p="2">
             <Table.Root showColumnBorder>
               <Table.Header>
                 <Table.Row>
-                  <Table.ColumnHeader bg="#00476F" color="white">ID</Table.ColumnHeader>
-                  <Table.ColumnHeader bg="#00476F" color="white">Nome</Table.ColumnHeader>
-                  <Table.ColumnHeader bg="#00476F" color="white">E-mail</Table.ColumnHeader>
-                  <Table.ColumnHeader bg="#00476F" color="white">Senha</Table.ColumnHeader>
-                  <Table.ColumnHeader bg="#00476F" color="white">Criado Em</Table.ColumnHeader>
-                  <Table.ColumnHeader bg="#00476F" color="white">Atualizado Em</Table.ColumnHeader>
-                  <Table.ColumnHeader bg="#00476F" color="white">Último Log</Table.ColumnHeader>
-                  <Table.ColumnHeader bg="#00476F" color="white">Ações</Table.ColumnHeader>
+                  <Table.ColumnHeader bg="#00476F" color="white">
+                    ID
+                  </Table.ColumnHeader>
+                  <Table.ColumnHeader bg="#00476F" color="white">
+                    Nome
+                  </Table.ColumnHeader>
+                  <Table.ColumnHeader bg="#00476F" color="white">
+                    E-mail
+                  </Table.ColumnHeader>
+                  <Table.ColumnHeader bg="#00476F" color="white">
+                    Senha
+                  </Table.ColumnHeader>
+                  <Table.ColumnHeader bg="#00476F" color="white">
+                    Criado Em
+                  </Table.ColumnHeader>
+                  <Table.ColumnHeader bg="#00476F" color="white">
+                    Atualizado Em
+                  </Table.ColumnHeader>
+                  <Table.ColumnHeader bg="#00476F" color="white">
+                    Último Log
+                  </Table.ColumnHeader>
+                  <Table.ColumnHeader bg="#00476F" color="white">
+                    Ações
+                  </Table.ColumnHeader>
                 </Table.Row>
               </Table.Header>
               <Table.Body>
@@ -144,37 +168,45 @@ export default function AdminUsers() {
                     <Table.Cell>{atendente.nome}</Table.Cell>
                     <Table.Cell>{atendente.email}</Table.Cell>
                     <Table.Cell>{atendente.senha}</Table.Cell>
-                    <Table.Cell>{atendente.createdAt ? atendente.createdAt.toDate().toLocaleString() : "Data não disponível"}</Table.Cell>
-                    <Table.Cell>{atendente.updatedAt ? atendente.updatedAt.toDate().toLocaleString() : "Data não disponível"}</Table.Cell>
-                    <Table.Cell>{atendente.lastLogin ? atendente.lastLogin.toDate().toLocaleString() : "Data não disponível"}</Table.Cell>
-                    <Table.Cell display="flex" gap="10px"><LuPen
-                      size={20}
-                      cursor="pointer"
-                      color="#3182CE"
-                      onClick={() => {
-                        setNome(atendente.nome);
-                        setEmail(atendente.email);
-                        setSenha(atendente.senha);
-                        setOpen(true);
-                      }}
-                    />
+                    <Table.Cell>
+                      {atendente.createdAt
+                        ? atendente.createdAt.toDate().toLocaleString()
+                        : "Data não disponível"}
+                    </Table.Cell>
+                    <Table.Cell>
+                      {atendente.updatedAt
+                        ? atendente.updatedAt.toDate().toLocaleString()
+                        : "Data não disponível"}
+                    </Table.Cell>
+                    <Table.Cell>
+                      {atendente.lastLogin
+                        ? atendente.lastLogin.toDate().toLocaleString()
+                        : "Data não disponível"}
+                    </Table.Cell>
+                    <Table.Cell display="flex" gap="10px">
+                      <LuPen
+                        size={20}
+                        cursor="pointer"
+                        color="#3182CE"
+                        onClick={() => {
+                          setNome(atendente.nome);
+                          setEmail(atendente.email);
+                          setSenha(atendente.senha);
+                          setOpen(true);
+                        }}
+                      />
                       <LuTrash
                         size={20}
                         cursor="pointer"
                         color="#E53E3E"
-
                         onClick={() => handleDelete(atendente.id)}
                       />
                     </Table.Cell>
-
                   </Table.Row>
                 ))}
-
               </Table.Body>
             </Table.Root>
-
           </Box>
-
 
           <Button
             bg="#00476f"
@@ -193,51 +225,49 @@ export default function AdminUsers() {
         </Box>
 
         {showSuccessAlert && (
-               <Alert.Root
-                 status="success"
-                 variant="solid"
-                 position="fixed"
-                 bottom="20px"
-                 right="20px"
-                 w="auto"
-                 h="auto"
-                 p="4"
-                 rounded="md"
-                 boxShadow="md"
-                 zIndex={9999}
-               >
-                 <Alert.Indicator />
-                 <Alert.Title>Usuário cadastrado com sucesso!</Alert.Title>
-               </Alert.Root>
-             )}
-       
-             {showErrorAlert && (
-               <Alert.Root
-                 status="error"
-                 variant="solid"
-                 position="fixed"
-                 bottom="20px"
-                 right="20px"
-                 w="auto"
-                 h="auto"
-                 p="4"
-                 rounded="md"
-                 boxShadow="md"
-                 zIndex={9999}
-               >
-                 <Alert.Indicator />
-                 <Alert.Title>Preencha todos os campos!</Alert.Title>
-               </Alert.Root>
-             )}
+          <Alert.Root
+            status="success"
+            variant="solid"
+            position="fixed"
+            bottom="20px"
+            right="20px"
+            w="auto"
+            h="auto"
+            p="4"
+            rounded="md"
+            boxShadow="md"
+            zIndex={9999}
+          >
+            <Alert.Indicator />
+            <Alert.Title>Usuário cadastrado com sucesso!</Alert.Title>
+          </Alert.Root>
+        )}
+
+        {showErrorAlert && (
+          <Alert.Root
+            status="error"
+            variant="solid"
+            position="fixed"
+            bottom="20px"
+            right="20px"
+            w="auto"
+            h="auto"
+            p="4"
+            rounded="md"
+            boxShadow="md"
+            zIndex={9999}
+          >
+            <Alert.Indicator />
+            <Alert.Title>Preencha todos os campos!</Alert.Title>
+          </Alert.Root>
+        )}
 
         <DialogModal
           open={open}
           onOpenChange={({ open }) => setOpen(open)}
           title="Cadastrar Usuário"
           textButton="Cadastrar"
-
         >
-
           <Box display="flex" flexDirection="column" gap="4">
             <Box>
               <Text mb="1">Nome</Text>
@@ -283,6 +313,6 @@ export default function AdminUsers() {
           </Box>
         </DialogModal>
       </Box>
-    </Box >
+    </Box>
   );
 }

@@ -1,4 +1,4 @@
-import { collection, addDoc, Timestamp, getDocs, limit, orderBy, query, where } from "firebase/firestore";
+import { collection, addDoc, Timestamp, getDocs, limit, orderBy, query, where, doc, updateDoc } from "firebase/firestore";
 import { database } from "./firebase";
 import { DispenserOptionType } from "../types/DispenserOptionType";
 import { getOptionLabel } from "./optionService";
@@ -26,6 +26,14 @@ export const saveTicket = async (option: DispenserOptionType, numero: string) =>
         console.error("Erro ao salvar o ticket:", error);
     }
 };
+
+
+export const updateTicketStatus = async (ticketId: string, newStatus: "pendente" | "atendendo" | "finalizado") => {
+  const ticketRef = doc(database, "tickets", ticketId);
+  await updateDoc(ticketRef, { status: newStatus });
+};
+
+
 
 
 export const generateNextTicketNumber = async (nome: string): Promise<string> => {

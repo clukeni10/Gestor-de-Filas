@@ -49,7 +49,7 @@ export default function Dispenser() {
     const blob = new Blob([pdfBytes], { type: "application/pdf" });
     const url = URL.createObjectURL(blob);
 
-    const popup = window.open("", "_blank", "width=350,height=500,left=200,top=200,resizable=no,scrollbars=no");
+    const popup = window.open("", "_blank", "width=350,height=500,left=500,top=500,resizable=no,scrollbars=no");
 
     if (!popup) {
       alert("O pop-up foi bloqueado. Por favor, permita pop-ups para este site.");

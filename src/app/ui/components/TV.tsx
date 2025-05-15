@@ -1,18 +1,11 @@
-/* import { useFilaStore } from "../../hooks/useFilaState";
- */import { fetchTicketsAgrupados, Ticket } from "../../database/ticketService";
+import { fetchTicketsAgrupados, Ticket } from "../../database/ticketService";
 import { Box, Flex, Image, Text } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 
 export default function TV() {
     const [time, setTime] = useState<string>("");
     const [filaPorLetra, setFilaPorLetra] = useState<{ [letra: string]: Ticket[] }>({});
-    /*  const fila = useFilaStore((state) => state.fila);
-     const [atendimento, setAtendimento] = useState<string>("");
-     const [consultas, setConsultas] = useState<string>("");
-     const [exames, setExames] = useState<string>("");
-     const [urgencias, setUrgencias] = useState<string>("");
-     const [informacoes, setInformacoes] = useState<string>(""); */
-
+   
     useEffect(() => {
         const updateTime = () => {
             const agora = new Date();

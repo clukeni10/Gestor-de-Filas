@@ -1,24 +1,44 @@
 import { Box, Flex, Text } from "@chakra-ui/react";
 import SidebarMenu from "../components/SidebarMenu";
 import { FaUser } from "react-icons/fa6";
-import { database } from "../../database/firebase"; // ajuste o caminho conforme necessário
+import { database, auth } from "../../database/firebase"; // ajuste o caminho conforme necessário
 import { collection, getCountFromServer } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { RiTicket2Line } from "react-icons/ri";
+import { onAuthStateChanged } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
 
 export default function AdminDashboard() {
   const [atendentesCount, setAtendentesCount] = useState<number | null>(null);
   const [opcoesCount, setOpcoesCount] = useState<number | null>(null);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
+    // Verifica o usuário logado
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        // Se não estiver logado, redireciona para "/"
+        navigate("/", { replace: true });
+      } else {
+        setLoading(false); // Usuário está logado, libera a tela
+      }
+    });
+
+    return () => unsubscribe(); // Cleanup do listener ao desmontar componente
+  }, [navigate]);
+
+  useEffect(() => {
+    if (loading) return; // espera o estado de login antes de carregar dados
+
     const fetchAtendentesCount = async () => {
       try {
-        const coll = collection(database, "atendentes"); // Use o database diretamente
+        const coll = collection(database, "atendentes");
         const snapshot = await getCountFromServer(coll);
         setAtendentesCount(snapshot.data().count);
       } catch (error) {
         console.error("Erro ao buscar atendentes:", error);
-        setAtendentesCount(0); // ou exiba uma mensagem de erro
+        setAtendentesCount(0);
       }
     };
 
@@ -31,13 +51,13 @@ export default function AdminDashboard() {
         console.error("Erro ao buscar opções:", error);
         setOpcoesCount(0);
       }
-    }
-
+    };
 
     fetchOpcoesCount();
     fetchAtendentesCount();
-  }, []);
+  }, [loading]);
 
+  if (loading) return <Text>Carregando...</Text>; // ou algum spinner
 
   return (
     <Box p="5">

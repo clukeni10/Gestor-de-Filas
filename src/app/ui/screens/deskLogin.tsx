@@ -6,36 +6,70 @@ import {
   Box,
   Heading,
   Text,
+  Alert,
 } from "@chakra-ui/react";
-/* import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../../database/firebase" */
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-/* 
-import { useNavigate } from "react-router-dom"; */
-
-
-
+import { collection, query, where, getDocs } from "firebase/firestore";
+import { database } from "../../database/firebase";
 
 export default function DeskLogin() {
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
- const navigate = useNavigate() 
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showErrorAlert, setShowErrorAlert] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
-
-  /* const handleLogin = async () => {
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
-      navigate("../desk");
-    } catch (error) {
-      console.error("Erro ao fazer login:", error);
-
-    }
-  }; */
+  const playSound = (url: string) => {
+    const audio = new Audio(url);
+    audio.play().catch((err) =>
+      console.error("Erro ao reproduzir som:", err)
+    );
+  };
 
   const handleLogin = async () => {
-    navigate("../deskLines");
+    if (!email || !password) {
+      setShowErrorAlert(true);
+      playSound("/sounds/error.wav");
+      setTimeout(() => setShowErrorAlert(false), 3000);
+      return;
+    }
+
+    setLoading(true); // inicia o loading
+
+    try {
+      const atendentesRef = collection(database, "atendentes");
+      const q = query(atendentesRef, where("email", "==", email));
+      const snapshot = await getDocs(q);
+
+      if (snapshot.empty) {
+        setShowErrorAlert(true);
+        playSound("/sounds/error.wav");
+        setLoading(false); // para o loading
+        return;
+      }
+
+      const doc = snapshot.docs[0];
+      const data = doc.data();
+
+      if (data.senha !== password) {
+        setShowErrorAlert(true);
+        playSound("/sounds/error.wav");
+        setLoading(false); // para o loading
+        return;
+      }
+
+      // Sucesso
+      navigate("../deskLines");
+    } catch (error) {
+      console.error("Erro ao fazer login:", error);
+      setShowErrorAlert(true);
+      playSound("/sounds/error.wav");
+      setTimeout(() => setShowErrorAlert(false), 3000);
+      setLoading(false); // para o loading
+    }
   };
+
   return (
     <Stack minH="100vh" align="center" justify="center" bg="gray.50">
       <Box
@@ -66,7 +100,13 @@ export default function DeskLogin() {
             color="black"
           />
 
-          <Button bg="#00476F" color="white" onClick={handleLogin} >
+          <Button
+            bg="#00476F"
+            color="white"
+            onClick={handleLogin}
+            loading={loading} // 👈 loading aqui
+            loadingText="Entrando..."
+          >
             Entrar
           </Button>
 
@@ -75,6 +115,24 @@ export default function DeskLogin() {
           </Text>
         </VStack>
       </Box>
+
+      {showErrorAlert && (
+        <Alert.Root
+          status="error"
+          variant="solid"
+          position="fixed"
+          bottom="20px"
+          right="20px"
+          w="auto"
+          p="4"
+          borderRadius="md"
+          boxShadow="md"
+          zIndex={9999}
+        >
+          <Alert.Title>Erro</Alert.Title>
+          <Alert.Description>Preencha os dados corretamente!</Alert.Description>
+        </Alert.Root>
+      )}
     </Stack>
   );
 }

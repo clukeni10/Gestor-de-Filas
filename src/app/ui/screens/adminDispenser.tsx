@@ -4,7 +4,10 @@ import DialogModal from "../components/DialogModal";
 import { useEffect, useState } from "react";
 import { LuPen, LuTrash } from "react-icons/lu";
 import { addOption, getAllOptions, editOption, deleteOption } from "../../database/optionService";
+import {  auth } from "../../database/firebase"; 
 import { DispenserOptionType } from "@/app/types/DispenserOptionType";
+import { onAuthStateChanged } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
 
 
 
@@ -17,6 +20,22 @@ export default function AdminDispenser() {
   const [editandoId, setEditandoId] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [opcoes, setOpcoes] = useState<DispenserOptionType[]>([]);
+    const navigate = useNavigate();
+  
+
+  useEffect(() => {
+      // Verifica o usuário logado
+      const unsubscribe = onAuthStateChanged(auth, (user) => {
+        if (!user) {
+          // Se não estiver logado, redireciona para "/"
+          navigate("/", { replace: true });
+        } else {
+          setLoading(false); // Usuário está logado, libera a tela
+        }
+      });
+  
+      return () => unsubscribe(); // Cleanup do listener ao desmontar componente
+    }, [navigate]);
 
   const playSound = (url: string) => {
     const audio = new Audio(url);

@@ -8,29 +8,45 @@ import {
   Text,
   Alert,
 } from "@chakra-ui/react";
-/* import { signInWithEmailAndPassword } from "firebase/auth";
- */import { useState } from "react";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { useState } from "react";
+import { auth } from "../../database/firebase";
 import { useNavigate } from "react-router-dom";
-/*import { auth } from "../../database/firebase"
-import { useNavigate } from "react-router-dom";*/
 
 export default function AdminLogin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
-  /*   const handleLogin = async () => {
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
-      navigate("../adminDashboard");
-    } catch (error) {
-      console.error("Erro ao fazer login:", error);
+  const [showErrorAlert, setShowErrorAlert] = useState(false);
 
-    }
-  }; */
+  const playSound = (url: string) => {
+    const audio = new Audio(url);
+    audio.play().catch((err) => console.error("Erro ao reproduzir som:", err));
+  };
 
   const handleLogin = async () => {
-    navigate("../adminDashboard");
+    if (!email || !password) {
+      setShowErrorAlert(true);
+      playSound("/sounds/error.wav");
+      setTimeout(() => setShowErrorAlert(false), 3000);
+      return;
+    }
+
+    setLoading(true); // inicia o loading
+
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      navigate("/adminDashboard");
+      // Não precisa setLoading(false) aqui pois ao navegar o componente será desmontado
+    } catch {
+      console.error("Erro ao fazer login:");
+      setShowErrorAlert(true);
+      playSound("/sounds/error.wav");
+      setLoading(false); // para o loading no erro
+      setTimeout(() => setShowErrorAlert(false), 3000);
+    }
   };
 
   return (
@@ -63,7 +79,13 @@ export default function AdminLogin() {
             color="black"
           />
 
-          <Button bg="#00476F" color="white" onClick={handleLogin}>
+          <Button
+            bg="#00476F"
+            color="white"
+            onClick={handleLogin}
+            loading={loading}    // 👈 loading no botão
+            loadingText="Entrando..."
+          >
             Entrar
           </Button>
 
@@ -73,22 +95,24 @@ export default function AdminLogin() {
         </VStack>
       </Box>
 
-      <Alert.Root
-        status="error"
-        w="500px"
-        position="absolute"
-        top="5%"
-        right="3%"
+      {showErrorAlert && (
+        <Alert.Root
+          status="error"
+          variant="solid"
+          position="fixed"
+          bottom="20px"
+          right="20px"
+          w="auto"
+          h="auto"
+          p="4"
+          rounded="md"
+          boxShadow="md"
+          zIndex={9999}
         >
-        <Alert.Indicator />
-        <Alert.Content>
-          <Alert.Title>Dados Incorretos</Alert.Title>
-          <Alert.Description>
-            Os dados inseridos estão incorrectos. Por favor retifique e tente
-            novamente.
-          </Alert.Description>
-        </Alert.Content>
-      </Alert.Root>
+          <Alert.Indicator />
+          <Alert.Title>Preencha todos os campos!</Alert.Title>
+        </Alert.Root>
+      )}
     </Stack>
   );
 }
